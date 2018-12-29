@@ -8,8 +8,6 @@
 #                   |
 #              apartment.py
 
-import os
-
 # Import framework
 import database
 import scraper
@@ -27,7 +25,7 @@ def load_apartments() -> None:
         print('Apartment {n} added to database.'.format(n=i+1))
 
 
-def sort_by_points(points: int) -> None:
+def sort_apartments(points: int) -> None:
     """ Function that prints out all apartments in database sorted by the
     position a person with points would be in the apartment queues """
 
@@ -37,7 +35,6 @@ def sort_by_points(points: int) -> None:
 
     six_found = False
     apartment.setup_name_formatting(sorted_apartments)
-    os.system('clear')
     for i, a in enumerate(sorted_apartments):
 
         if a.position_in_queue(points) == 6 and not six_found:
