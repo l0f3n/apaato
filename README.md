@@ -8,4 +8,4 @@ The second column displays your position in the queue to that apartment with you
  Dependencies: `selenium` and `sqlite3`.
 
 ## Usage
-Run the command `python3 -i main.py`, then `load_apartments()` and finally  `sort_apartments(your_queue_points)`.
+Run the command `python3 -i main.py`, then `load_apartments()` and finally  `list_apartments(your_queue_points)`.

@@ -1,4 +1,6 @@
-# Import selenium for web scraping
+#scraper.py
+
+# Import selenium for webscraping
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
@@ -44,8 +46,6 @@ def fetch_apartment(driver: webdriver, link: str) -> Apartment:
     """ Gets information about a single apartment from link using webdriver """
 
     def top_queue_points(text: str) -> list:
-        """ Returns list with the five highest queue points to apartment """
-
         applicants = number_of_applicants(text)
 
         try:
@@ -81,17 +81,12 @@ def fetch_apartment(driver: webdriver, link: str) -> Apartment:
         return queue_points_list
 
     def number_of_applicants(text: str) -> int:
-        """ Returns the number of applicants to an apartment """
-
         try:
             return int(text[text.index('v')+2:text.index('v')+4])
         except ValueError:
             return 0
 
     def object_information() -> dict:
-        """ Puts all information classified as object information in a dict
-        """
-
         xpath = "//div[@class='objektinformation']/table/tbody/tr"
         elems = driver.find_elements_by_xpath(xpath)
 
@@ -124,8 +119,6 @@ def fetch_apartment(driver: webdriver, link: str) -> Apartment:
         return dict_
 
     def address() -> str:
-        """ Returns the address of an apartment """
-
         return driver.find_element_by_class_name("adress").text
 
 #    def furnished() -> bool:

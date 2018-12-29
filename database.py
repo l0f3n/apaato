@@ -1,11 +1,13 @@
+#database.py
+
 # Import sqlite3 to store apartments in a database
 import sqlite3
 
-# Import framework
-from apartment import Apartment
-
 # Import generator for annoatations
 from typing import Generator
+
+# Import framework
+from apartment import Apartment
 
 
 DATABASE_NAME = 'apartments.db'
