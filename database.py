@@ -1,4 +1,4 @@
-#database.py
+# database.py
 
 # Import sqlite3 to store apartments in a database
 import sqlite3
@@ -10,11 +10,8 @@ from typing import Generator
 from apartment import Apartment
 
 
-DATABASE_NAME = 'apartments.db'
-conn = sqlite3.connect(DATABASE_NAME)
-
+conn = sqlite3.connect('apartments.db')
 c = conn.cursor()
-
 c.execute(""" CREATE TABLE IF NOT EXISTS apartments (
                 address text,
                 link text,
@@ -68,7 +65,7 @@ def to_dict(apartment_properties: tuple) -> dict:
     property_names = ['address', 'link', 'size', 'applicants']
 
     return {**dict(zip(property_names, apartment_properties[:-5])),
-            'queue_points_list': apartment_properties[-5:]}
+            'queue_points_list': list(apartment_properties[-5:])}
 
 
 def wipe_database() -> None:

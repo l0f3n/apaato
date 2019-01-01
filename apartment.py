@@ -1,4 +1,5 @@
-#apartment.py
+# apartment.py
+
 
 class Apartment:
     """ Class used to store all the information about an apartment """
@@ -19,3 +20,11 @@ class Apartment:
             position = 6
 
         return position
+
+    def insert_into_queue(self, other_points: int) -> None:
+        """ Enter other_points into queue of apartment """
+
+        for i, points in enumerate(self.queue_points_list):
+            if other_points > points:
+                other_points, self.queue_points_list[i] = \
+                    self.queue_points_list[i], other_points

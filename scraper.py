@@ -1,4 +1,4 @@
-#scraper.py
+# scraper.py
 
 # Import selenium for webscraping
 from selenium import webdriver
@@ -32,9 +32,12 @@ def fetch_all_apartments() -> Generator[Apartment, None, None]:
     driver.get(start_page)
 
     driver.set_page_load_timeout(10)
+
     # Finds all listed apartments and their links
     apartments = driver.find_elements_by_class_name('noLinkcolor')[1:]
     apartment_links = [a.get_attribute('href') for a in apartments]
+
+    yield len(apartment_links)
 
     for link in apartment_links:
         yield fetch_apartment(driver, link)
