@@ -55,6 +55,15 @@ def list_apartments(queue_points: int) -> None:
 def simulate(other_points: int) -> None:
     """ Runs simulation with other points and saves result in database """
 
+    unique = set()
+    for apartment in list(database.all_apartments_in_database()):
+        unique.update(apartment.queue_points_list)
+
+    if other_points in unique:
+        print("Unable to simulate with '" + str(other_points) + "' points.")
+        print("Points must be unique.")
+        return
+
     simulation_gen = simulation.run_simulation(other_points)
     total = next(simulation_gen)
 
@@ -79,5 +88,8 @@ def list_probabilites():
     """ Print all combinations sorted by the chance of getting any of the
     apartments in that combination """
 
-    tf = text_formatter.CombintationListing(combintations)
-    tf.print()
+    try:
+        tf = text_formatter.CombintationListing(combintations)
+        tf.print()
+    except NameError:
+        print("Please run 'simulate()' first.")
