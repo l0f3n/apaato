@@ -27,13 +27,6 @@ def run_simulation(other_points: int) -> dict:
         """ Returns a filter object of all apartments that the user wants to
         apply for """
 
-        def apartment_filter(a: Apartment) -> bool:
-
-            pos = a.position_in_queue(other_points)
-            return pos not in [6]  # and a.size == '1 rum'
-
-        return filter(apartment_filter, apartments)
-
     def nck(n: int, r: int) -> int:
         """ Used to calculate how many simulations are to be run """
 
@@ -53,22 +46,18 @@ def run_simulation(other_points: int) -> dict:
             for u_apartment in u_combination:
                 if not u_apartment in current_combination:
                     break
-                else:
-                    return False
-
+            else:
+                return False
         return True
 
     # Load every apartment from database
     apartments = list(database.all_apartments_in_database())
 
-    # Find all desired apartments
-    possible_apartments = list(desired_apartments(apartments, other_points))
-
     # Calculate the amount of apartments that are to be applied for at a time
-    count = min(len(possible_apartments), 5)
+    count = min(len(apartments), 5)
 
     # Calculates the total number of combinations
-    yield sum([nck(len(possible_apartments), number)
+    yield sum([nck(len(apartments), number)
                for number in range(1, count+1)])
 
     # Keeps track of all apartments that have a 100% or 0% chance.
@@ -83,7 +72,7 @@ def run_simulation(other_points: int) -> dict:
     for number in range(1, count+1):
 
         # Find all combinations of all desired apartments
-        combinations = itertools.combinations(possible_apartments, number)
+        combinations = itertools.combinations(apartments, number)
 
         # For every combination of apartments
         for current_combination in combinations:
