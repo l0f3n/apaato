@@ -3,7 +3,7 @@
 # Import sqlite3 to store apartments in a database
 import sqlite3
 
-# Import generator for annoatations
+# Import generator for annotations
 from typing import Generator
 
 # Import framework
@@ -28,7 +28,7 @@ def insert_apartment(app: Apartment) -> None:
     """ Inserts an Apartment object into the database """
 
     apartment_properties = {**app.__dict__, **(dict(zip(
-                            ['first', 'second', 'third', 'fourth', 'fitfh'],
+                            ['first', 'second', 'third', 'fourth', 'fifth'],
                             app.queue_points_list)))}
     with conn:
         c.execute(""" INSERT INTO apartments VALUES (:address,
@@ -39,7 +39,7 @@ def insert_apartment(app: Apartment) -> None:
                                                      :second,
                                                      :third,
                                                      :fourth,
-                                                     :fitfh) """,
+                                                     :fifth) """,
                   apartment_properties)
 
 
@@ -59,7 +59,7 @@ def to_apartment(apartment_properties: tuple) -> Apartment:
 
 
 def to_dict(apartment_properties: tuple) -> dict:
-    """ Takes tuple (from database) and zips it with the kwarg names of the
+    """ Takes tuple (from database) and zips it with the kwargs names of the
     Apartment class """
 
     property_names = ['address', 'link', 'size', 'applicants']

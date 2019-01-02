@@ -105,7 +105,7 @@ class CombintationListing:
             if prob_length > self.total_probability_length:
                 self.total_probability_length = prob_length
 
-            # Aparments and probability
+            # Apartments and probability
             for index, apartment in enumerate(comb):
 
                 address, prob = apartment
@@ -174,7 +174,7 @@ class CombintationListing:
         print(' '.join(list(all_fields())))
 
     def print(self):
-        """ Prints all combinations and their probabilites """
+        """ Prints all combinations and their probabilities """
 
         for index, combination in enumerate(self.combinations):
             self.print_combination(index, combination)

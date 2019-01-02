@@ -20,6 +20,7 @@ def run_simulation(other_points: int) -> dict:
     def total_chance(combination):
         """ Returns the total chance of getting any apartment at all from
         combination """
+
         return sum((apartment[1] for apartment in combination))
 
     def desired_apartments(apartments: list, other_points: int) -> filter:
@@ -42,23 +43,20 @@ def run_simulation(other_points: int) -> dict:
         return numer // denom
 
     def run_iteration() -> bool:
-        """ Tests if it's necessary to simulate currenct combination """
+        """ Tests if it's necessary to simulate current combination """
 
-        # For every unecessary combination
+        # For every unnecessary combination
         for u_combination in u_combinations:
 
-            # If all apartments in an uncessary combination is in current
-            # combination
+            # If all apartments in an unnecessary combination is in current
+            # combination then its unnecessary to run simulation
             for u_apartment in u_combination:
-                if not u_apartment[0] in current_combination:
+                if not u_apartment in current_combination:
                     break
                 else:
                     return False
 
         return True
-
-    global simulation_results
-    simulation_results = []
 
     # Load every apartment from database
     apartments = list(database.all_apartments_in_database())
@@ -69,16 +67,17 @@ def run_simulation(other_points: int) -> dict:
     # Calculate the amount of apartments that are to be applied for at a time
     count = min(len(possible_apartments), 5)
 
-    # Calculates the total number of combinations and total completed
+    # Calculates the total number of combinations
     yield sum([nck(len(possible_apartments), number)
                for number in range(1, count+1)])
 
     # Keeps track of all apartments that have a 100% or 0% chance.
     # Any simulation with these apartments in them is not necessary to run
-    # because they will have the exact same chance (0%) or 100% (100%) when
+    # because they will have the exact same chance (0%) or 100% (100%) whether
     # having that apartment in them or not
     u_combinations = []
 
+    # Keeps track of which simulation is running
     current = 0
 
     for number in range(1, count+1):
@@ -104,14 +103,14 @@ def run_simulation(other_points: int) -> dict:
                         apartment.insert_into_queue(other_points)
                         break
 
-            # Runs 1000 simulations with current arrangement and yield result
+            # Run many simulations with current combination
             res = do_simulations(apartments_copy, current_combination,
                                  other_points)
             res = list(res.items())
 
             chance = total_chance(res)
             if chance == 0 or chance >= 1:
-                u_combinations.append([current_combination])
+                u_combinations.append(current_combination)
 
             yield current, res
 
