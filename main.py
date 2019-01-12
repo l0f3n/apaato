@@ -12,6 +12,7 @@
 
 import os
 import time
+from datetime import datetime
 
 # Import framework
 import database
@@ -23,7 +24,7 @@ import text_formatter
 def load_accommodations() -> None:
     """ Loads all accommodations from studentbostader.se into the database """
 
-    database.wipe_database()
+    database.wipe()
 
     accommodations_gen = scraper.fetch_all_accommodations()
     total = next(accommodations_gen)
@@ -46,28 +47,45 @@ def list_accommodations(queue_points: int) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
-    accommodations = list(database.all_accommodations_in_database())
+    # Gets all the accommodations from the database
+    accommodations = list(database.query('SELECT * FROM accommodations'))
 
-    tf = text_formatter.AccommodationListing(accommodations,
-                                             queue_points=queue_points)
+    tf = text_formatter.AccommodationListing(accommodations, queue_points)
     tf.print()
 
 
 def simulate(other_points: int) -> None:
     """ Runs simulation with other points and saves result in database """
 
-    unique = set()
-    for accommodation in list(database.all_accommodations_in_database()):
-        unique.update(accommodation.queue_points_list)
+    # Make a set of all the different points that are in the queues
+    unique_queue_points = set()
+    for accommodation in list(database.query('SELECT * FROM accommodations')):
+        unique_queue_points.update(accommodation.queue_points_list)
 
-    if other_points in unique:
-        print("Unable to simulate with '" + str(other_points) + "' points.")
-        print("Points must be unique.")
+    # Check that the queue_points are unique
+    if other_points in unique_queue_points:
+        print("Unable to simulate with '" + str(other_points) + "' points. " + \
+        "Points must be unique.")
         return
 
-    simulation_gen = simulation.run_simulation(other_points)
+    # Finds the earliest latest application acceptance date
+    earliest_date = datetime.strptime('9999-12-31', '%Y-%m-%d')
+    for accommodation in database.all_accommodations():
+        d = datetime.strptime(accommodation.date, '%Y-%m-%d')
+        if d < earliest_date:
+            earliest_date = d
+
+    # Only simulate with the apartments that have the earliest latest
+    # application acceptance date
+    date = earliest_date.strftime('%Y-%m-%d')
+    search = "SELECT * FROM accommodations WHERE date LIKE '{}'".format(date)
+    accommodations = list(database.query(search))
+
+    # Make the generator and call next once to get the total
+    simulation_gen = simulation.run_simulation(other_points, accommodations)
     total = next(simulation_gen)
 
+    # Store all results from simulation
     global combintations
     combintations = []
 

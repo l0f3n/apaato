@@ -49,6 +49,51 @@ def fetch_accommodation(driver: webdriver, link: str) -> Accommodation:
     """ Gets information about a single accommodation from link using
     webdriver """
 
+    def address() -> str:
+        return driver.find_element_by_class_name("adress").text
+
+    def last_application_date():
+        text = driver.find_element_by_class_name("IntresseMeddelande").text
+        return text[25:35]
+
+    def object_information() -> dict:
+        xpath = "//div[@class='objektinformation']/table/tbody/tr"
+        elems = driver.find_elements_by_xpath(xpath)
+
+        tuple_elems = [elem.text.split(' ', 1) for elem in elems]
+
+        dict_ = {}
+
+#        area = tuple_elems[0][1]
+#        dict_['area'] = area
+#
+        size = tuple_elems[1][1]
+        dict_['size'] = size
+#
+#        space = float(''.join(
+#                       c for c in tuple_elems[2][1] if c in digits+'.'))
+#        dict_['space'] = space
+#
+#        rent = int(''.join(c for c in tuple_elems[3][1] if c in digits))
+#        dict_['rent'] = rent
+#
+#        floor = tuple_elems[4][1][0]
+#        dict_['floor'] = floor
+#
+#        has_elevator = tuple_elems[5][1] == 'Ja'
+#        dict_['elevator'] = has_elevator
+#
+#        date = int(''.join(c for c in tuple_elems[6][1] if c in digits))
+#        dict_['available_date'] = date
+#
+        return dict_
+
+    def number_of_applicants(text: str) -> int:
+        try:
+            return int(text[text.index('v')+2:text.index('v')+4])
+        except ValueError:
+            return 0
+
     def top_queue_points(text: str) -> list:
         applicants = number_of_applicants(text)
 
@@ -84,47 +129,6 @@ def fetch_accommodation(driver: webdriver, link: str) -> Accommodation:
 
         return queue_points_list
 
-    def number_of_applicants(text: str) -> int:
-        try:
-            return int(text[text.index('v')+2:text.index('v')+4])
-        except ValueError:
-            return 0
-
-    def object_information() -> dict:
-        xpath = "//div[@class='objektinformation']/table/tbody/tr"
-        elems = driver.find_elements_by_xpath(xpath)
-
-        tuple_elems = [elem.text.split(' ', 1) for elem in elems]
-
-        dict_ = {}
-
-#        area = tuple_elems[0][1]
-#        dict_['area'] = area
-#
-        size = tuple_elems[1][1]
-        dict_['size'] = size
-#
-#        space = float(''.join(
-#                       c for c in tuple_elems[2][1] if c in digits+'.'))
-#        dict_['space'] = space
-#
-#        rent = int(''.join(c for c in tuple_elems[3][1] if c in digits))
-#        dict_['rent'] = rent
-#
-#        floor = tuple_elems[4][1][0]
-#        dict_['floor'] = floor
-#
-#        has_elevator = tuple_elems[5][1] == 'Ja'
-#        dict_['elevator'] = has_elevator
-#
-#        date = int(''.join(c for c in tuple_elems[6][1] if c in digits))
-#        dict_['available_date'] = date
-#
-        return dict_
-
-    def address() -> str:
-        return driver.find_element_by_class_name("adress").text
-
 #    def furnished() -> bool:
 #        """ Returns whether the accommodation is furnished or not """
 #
@@ -146,15 +150,16 @@ def fetch_accommodation(driver: webdriver, link: str) -> Accommodation:
             break
 
     # Get text about the current accommodation
-    text = driver.find_element_by_xpath("//div[@class='col']/p").text
+    interest_text = driver.find_element_by_xpath("//div[@class='col']/p").text
 
     accommodation_properties = {
             'address': address(),
             'link': link,
+            'date': last_application_date(),
             **object_information(),
             # 'furnished': furnished(),
-            'applicants': number_of_applicants(text),
-            'queue_points_list': top_queue_points(text)
+            'applicants': number_of_applicants(interest_text),
+            'queue_points_list': top_queue_points(interest_text)
             }
 
     return Accommodation(**accommodation_properties)

@@ -14,7 +14,7 @@ import database
 from accommodation import Accommodation
 
 
-def run_simulation(other_points: int) -> dict:
+def run_simulation(other_points: int, accommodations: list) -> dict:
     """ Runs simulation for every combination of accommodations that is
     desired """
 
@@ -24,17 +24,17 @@ def run_simulation(other_points: int) -> dict:
 
         return sum((accommodation[1] for accommodation in combination))
 
-    def desired_accommodations(accommodations: list,
-                               other_points: int) -> filter:
+    def filter_accommodations(accommodations: list,
+                              other_points: int) -> filter:
         """ Returns a filter object of all accommodations that the user wants to
         apply for """
 
-        def accommodation_filter(a: Accommodation) -> bool:
+        def inner_filter(a: Accommodation) -> bool:
 
             pos = a.position_in_queue(other_points)
             return pos not in [6]  # and a.size == '1 rum'
 
-        return filter(accommodation_filter, accommodations)
+        return filter(inner_filter, accommodations)
 
     def nck(n: int, r: int) -> int:
         """ Used to calculate how many simulations are to be run """
@@ -60,12 +60,9 @@ def run_simulation(other_points: int) -> dict:
 
         return True
 
-    # Load every accommodation from database
-    accommodations = list(database.all_accommodations_in_database())
-
     # Find all desired accommodations
-    possible_accommodations = list(desired_accommodations(accommodations,
-                                                          other_points))
+    possible_accommodations = list(filter_accommodations(accommodations,
+                                                         other_points))
 
     # Calculate the amount of accommodations that are to be applied for at a
     # time
@@ -108,9 +105,8 @@ def run_simulation(other_points: int) -> dict:
                         break
 
             # Run many simulations with current combination
-            res = do_simulations(accommodations_copy, current_combination,
-                                 other_points)
-            res = list(res.items())
+            res = list(do_simulations(accommodations_copy, current_combination,
+                                 other_points).items())
 
             chance = total_chance(res)
             if chance == 0 or chance >= 1:
