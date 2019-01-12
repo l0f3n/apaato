@@ -11,28 +11,30 @@ import functools
 
 # Import framework
 import database
-from apartment import Apartment
+from accommodation import Accommodation
 
 
 def run_simulation(other_points: int) -> dict:
-    """ Runs simulation for every combination of apartments that is desired """
+    """ Runs simulation for every combination of accommodations that is
+    desired """
 
     def total_chance(combination):
-        """ Returns the total chance of getting any apartment at all from
+        """ Returns the total chance of getting any accommodation at all from
         combination """
 
-        return sum((apartment[1] for apartment in combination))
+        return sum((accommodation[1] for accommodation in combination))
 
-    def desired_apartments(apartments: list, other_points: int) -> filter:
-        """ Returns a filter object of all apartments that the user wants to
+    def desired_accommodations(accommodations: list,
+                               other_points: int) -> filter:
+        """ Returns a filter object of all accommodations that the user wants to
         apply for """
 
-        def apartment_filter(a: Apartment) -> bool:
+        def accommodation_filter(a: Accommodation) -> bool:
 
             pos = a.position_in_queue(other_points)
             return pos not in [6]  # and a.size == '1 rum'
 
-        return filter(apartment_filter, apartments)
+        return filter(accommodation_filter, accommodations)
 
     def nck(n: int, r: int) -> int:
         """ Used to calculate how many simulations are to be run """
@@ -48,33 +50,35 @@ def run_simulation(other_points: int) -> dict:
         # For every unnecessary combination
         for u_combination in u_combinations:
 
-            # If all apartments in an unnecessary combination is in current
+            # If all accommodations in an unnecessary combination is in current
             # combination then its unnecessary to run simulation
-            for u_apartment in u_combination:
-                if not u_apartment in current_combination:
+            for u_accommodation in u_combination:
+                if not u_accommodation in current_combination:
                     break
                 else:
                     return False
 
         return True
 
-    # Load every apartment from database
-    apartments = list(database.all_apartments_in_database())
+    # Load every accommodation from database
+    accommodations = list(database.all_accommodations_in_database())
 
-    # Find all desired apartments
-    possible_apartments = list(desired_apartments(apartments, other_points))
+    # Find all desired accommodations
+    possible_accommodations = list(desired_accommodations(accommodations,
+                                                          other_points))
 
-    # Calculate the amount of apartments that are to be applied for at a time
-    count = min(len(possible_apartments), 5)
+    # Calculate the amount of accommodations that are to be applied for at a
+    # time
+    count = min(len(possible_accommodations), 5)
 
     # Calculates the total number of combinations
-    yield sum([nck(len(possible_apartments), number)
+    yield sum([nck(len(possible_accommodations), number)
                for number in range(1, count+1)])
 
-    # Keeps track of all apartments that have a 100% or 0% chance.
-    # Any simulation with these apartments in them is not necessary to run
+    # Keeps track of all accommodations that have a 100% or 0% chance.
+    # Any simulation with these accommodations in them is not necessary to run
     # because they will have the exact same chance (0%) or 100% (100%) whether
-    # having that apartment in them or not
+    # having that accommodation in them or not
     u_combinations = []
 
     # Keeps track of which simulation is running
@@ -82,10 +86,10 @@ def run_simulation(other_points: int) -> dict:
 
     for number in range(1, count+1):
 
-        # Find all combinations of all desired apartments
-        combinations = itertools.combinations(possible_apartments, number)
+        # Find all combinations of all desired accommodations
+        combinations = itertools.combinations(possible_accommodations, number)
 
-        # For every combination of apartments
+        # For every combination of accommodations
         for current_combination in combinations:
             current += 1
 
@@ -94,17 +98,17 @@ def run_simulation(other_points: int) -> dict:
                 continue
 
             # Make a copy as to not modify the original
-            apartments_copy = copy.deepcopy(apartments)
+            accommodations_copy = copy.deepcopy(accommodations)
 
-            # Enter queue of every apartment that is in current combination
-            for desired_apartment in current_combination:
-                for apartment in apartments_copy:
-                    if desired_apartment.address == apartment.address:
-                        apartment.insert_into_queue(other_points)
+            # Enter queue of every accommodation that is in current combination
+            for desired_accommodation in current_combination:
+                for accommodation in accommodations_copy:
+                    if desired_accommodation.address == accommodation.address:
+                        accommodation.insert_into_queue(other_points)
                         break
 
             # Run many simulations with current combination
-            res = do_simulations(apartments_copy, current_combination,
+            res = do_simulations(accommodations_copy, current_combination,
                                  other_points)
             res = list(res.items())
 
@@ -115,19 +119,19 @@ def run_simulation(other_points: int) -> dict:
             yield current, res
 
 
-def do_simulations(apartments: list, combination: list,
+def do_simulations(accommodations: list, combination: list,
                    other_points: int, n: int = 1000) -> dict:
-    """ Runs simulation of apartments n number of times and returns a
+    """ Runs simulation of accommodations n number of times and returns a
     dictionary with {address, [(points, chance), ...]} that gives the chance
-    for person with points to get the apartment at address """
+    for person with points to get the accommodation at address """
 
-    ret = {apartment.address: 0 for apartment in combination}
+    ret = {accommodation.address: 0 for accommodation in combination}
 
     # Run the simulation n times
     for _ in range(n):
-        result = simulate(apartments)
+        result = simulate(accommodations)
 
-        # For every person that got an apartment
+        # For every person that got an accommodation
         for address, points in result:
 
             # Only save my chances
@@ -138,55 +142,56 @@ def do_simulations(apartments: list, combination: list,
     return ret
 
 
-def simulate(apartments: list) -> list:
+def simulate(accommodations: list) -> list:
     """ Returns a list of tuples (address, points) which is a way that the
-    apartments could be distributed between every person, points representing
-    the person that got the apartment at address """
+    accommodations could be distributed between every person, points
+    representing the person that got the accommodation at address """
 
     result = []
 
-    # Keep a list of indexes of apartments that are still available
-    occupied_apartments = set()
+    # Keep a list of indexes of accommodations that are still available
+    occupied_accommodations = set()
     people_with_offers = set()
 
     # Go through every position
     for position in range(5):
 
         # Keep a dictionary with {points: [index, ...]} where the indexes
-        # are the apartments that the person with points could get
-        potential_apartments = {}
+        # are the accommodations that the person with points could get
+        potential_accommodations = {}
 
-        # For every apartment
-        for apartment_index, apartment in enumerate(apartments):
+        # For every accommodation
+        for accommodation_index, accommodation in enumerate(accommodations):
 
-            # Get the points of the person that is at position in apartment
-            points = apartment.queue_points_list[position]
+            # Get the points of the person that is at position in accommodation
+            points = accommodation.queue_points_list[position]
 
-            # If that person did not already get an offer and the apartment is
-            # available
+            # If that person did not already get an offer and the accommodation
+            # is available
             if points not in people_with_offers and \
-               apartment_index not in occupied_apartments:
+               accommodation_index not in occupied_accommodations:
 
-                # Add the apartment to list of potential apartments for person
-                # with points
-                if points in potential_apartments:
-                    potential_apartments[points] += [apartment_index]
+                # Add the accommodation to list of potential accommodations for
+                # person with points
+                if points in potential_accommodations:
+                    potential_accommodations[points] += [accommodation_index]
                 else:
-                    potential_apartments[points] = [apartment_index]
+                    potential_accommodations[points] = [accommodation_index]
 
-        # For every person and the apartments they could get
-        for points, potential_apartment in potential_apartments.items():
+        # For every person and the accommodations they could get
+        for points, potential_accommodation in potential_accommodations.items():
 
-            # Choose one of the apartments randomly
-            chosen_apartment_index = random.choice(potential_apartment)
+            # Choose one of the accommodations randomly
+            chosen_accommodation_index = random.choice(potential_accommodation)
 
-            # Add apartments to not available apartments
-            occupied_apartments.add(chosen_apartment_index)
+            # Add accommodations to not available accommodations
+            occupied_accommodations.add(chosen_accommodation_index)
 
-            # The person cant get another apartment
+            # The person cant get another accommodation
             people_with_offers.add(points)
 
-            # Save the person together with their apartment
-            result.append((apartments[chosen_apartment_index].address, points))
+            # Save the person together with their accommodation
+            result.append((accommodations[chosen_accommodation_index].address,
+                           points))
 
     return result

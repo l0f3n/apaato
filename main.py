@@ -8,7 +8,7 @@
 #     |            |                 |                |
 #     +------------+-------+---------+----------------+
 #                          |
-#                     apartment.py
+#                     accommodation.py
 
 import os
 import time
@@ -20,18 +20,18 @@ import simulation
 import text_formatter
 
 
-def load_apartments() -> None:
-    """ Loads all apartments from studentbostader.se into the database """
+def load_accommodations() -> None:
+    """ Loads all accommodations from studentbostader.se into the database """
 
     database.wipe_database()
 
-    apartments_gen = scraper.fetch_all_apartments()
-    total = next(apartments_gen)
+    accommodations_gen = scraper.fetch_all_accommodations()
+    total = next(accommodations_gen)
 
     start_time = time.time()
 
-    for current, apartment in enumerate(apartments_gen):
-        database.insert_apartment(apartment)
+    for current, accommodation in enumerate(accommodations_gen):
+        database.insert_accommodation(accommodation)
 
         os.system('clear')
         print('{current} / {total}'.format(
@@ -42,13 +42,14 @@ def load_apartments() -> None:
         time=time.time() - start_time))
 
 
-def list_apartments(queue_points: int) -> None:
-    """ Prints out all apartments in database sorted by the position a person
-    with queue_points would be in the apartment queues """
+def list_accommodations(queue_points: int) -> None:
+    """ Prints out all accommodations in database sorted by the position a
+    person with queue_points would be in the accommodation queues """
 
-    apartments = list(database.all_apartments_in_database())
+    accommodations = list(database.all_accommodations_in_database())
 
-    tf = text_formatter.ApartmentListing(apartments, queue_points=queue_points)
+    tf = text_formatter.AccommodationListing(accommodations,
+                                             queue_points=queue_points)
     tf.print()
 
 
@@ -56,8 +57,8 @@ def simulate(other_points: int) -> None:
     """ Runs simulation with other points and saves result in database """
 
     unique = set()
-    for apartment in list(database.all_apartments_in_database()):
-        unique.update(apartment.queue_points_list)
+    for accommodation in list(database.all_accommodations_in_database()):
+        unique.update(accommodation.queue_points_list)
 
     if other_points in unique:
         print("Unable to simulate with '" + str(other_points) + "' points.")
@@ -86,7 +87,7 @@ def simulate(other_points: int) -> None:
 
 def list_probabilites():
     """ Print all combinations sorted by the chance of getting any of the
-    apartments in that combination """
+    accommodations in that combination """
 
     try:
         tf = text_formatter.CombintationListing(combintations)

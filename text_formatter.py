@@ -4,14 +4,14 @@
 from typing import Generator
 
 # Import framework
-from apartment import Apartment
+from accommodation import Accommodation
 
 
-class ApartmentListing:
-    """ Class that handles the printing of the apartments """
+class AccommodationListing:
+    """ Class that handles the printing of the accommodations """
 
-    def __init__(self, apartments: list, queue_points: int):
-        self.apartments = sorted(apartments, key=lambda x:
+    def __init__(self, accommodations: list, queue_points: int):
+        self.accommodations = sorted(accommodations, key=lambda x:
                                  (x.position_in_queue(queue_points),
                                   x.applicants))
 
@@ -22,10 +22,10 @@ class ApartmentListing:
         self.calculate_padding()
 
     def calculate_padding(self) -> None:
-        """ Calculates the correct amount of padding for the apartment address
-        and size """
+        """ Calculates the correct amount of padding for the accommodation
+        address and size """
 
-        for a in self.apartments:
+        for a in self.accommodations:
 
             # Address
             address_length = len(a.address)
@@ -37,48 +37,49 @@ class ApartmentListing:
             if size_length > self.size_length:
                 self.size_length = size_length
 
-    def print_apartment(self, index: int, apartment: Apartment) -> None:
-        """ Prints a single apartment given its index """
+    def print_accommodation(self, index: int,
+                            accommodation: Accommodation) -> None:
+        """ Prints a single accommodation given its index """
 
         def formatted_index() -> str:
             f_index = "{index:>{length}}".format(
                 index=str(index+1) + ':',
-                length=len(str(len(self.apartments)))+1)
+                length=len(str(len(self.accommodations)))+1)
 
             return f_index
 
         def formatted_position() -> str:
             f_position = "{position}".format(
-                position=apartment.position_in_queue(self.queue_points))
+                position=accommodation.position_in_queue(self.queue_points))
 
             return f_position
 
-        def formatted_apartment() -> str:
-            f_address = "{apartment.address:<{address_length}}".format(
-                apartment=apartment,
+        def formatted_accommodation() -> str:
+            f_address = "{accommodation.address:<{address_length}}".format(
+                accommodation=accommodation,
                 address_length=self.address_length)
 
-            f_size = "{apartment.size:<{size_length}}".format(
-                apartment=apartment,
+            f_size = "{accommodation.size:<{size_length}}".format(
+                accommodation=accommodation,
                 size_length=self.size_length)
 
-            f_link = "{apartment.link}".format(
-                apartment=apartment)
+            f_link = "{accommodation.link}".format(
+                accommodation=accommodation)
 
             return ' '.join([f_address, f_size, f_link])
 
         def all_fields() -> Generator[str, None, None]:
             yield formatted_index()
             yield formatted_position()
-            yield formatted_apartment()
+            yield formatted_accommodation()
 
         print(' '.join(list(all_fields())))
 
     def print(self):
-        """ Prints all the apartments """
+        """ Prints all the accommodations """
 
-        for index, apartment in enumerate(self.apartments):
-            self.print_apartment(index, apartment)
+        for index, accommodation in enumerate(self.accommodations):
+            self.print_accommodation(index, accommodation)
 
 
 class CombintationListing:
@@ -105,14 +106,14 @@ class CombintationListing:
             if prob_length > self.total_probability_length:
                 self.total_probability_length = prob_length
 
-            # Apartments and probability
-            for index, apartment in enumerate(comb):
+            # accommodations and probability
+            for index, accommodation in enumerate(comb):
 
-                address, prob = apartment
+                address, prob = accommodation
 
-                apartment_length = len(address)
-                if apartment_length > self.address_length[index]:
-                    self.address_length[index] = apartment_length
+                accommodation_length = len(address)
+                if accommodation_length > self.address_length[index]:
+                    self.address_length[index] = accommodation_length
 
                 probability_length = self.probability_len(prob)
                 if probability_length > self.probability_length[index]:
@@ -127,9 +128,9 @@ class CombintationListing:
         return len(f_probability)
 
     def total_probability(self, combination):
-        """ Returns the chance of getting any apartment from combination """
+        """ Returns the chance of getting any accommodation from combination """
 
-        return sum((apartment[1] for apartment in combination))
+        return sum((accommodation[1] for accommodation in combination))
 
     def print_combination(self, index, combination):
         """ Prints a formatted combination given index and combination """
@@ -148,28 +149,29 @@ class CombintationListing:
 
             return f_probability
 
-        def formatted_apartment(index, apartment):
+        def formatted_accommodation(index, accommodation):
             f_a = "{probability:>{p_len}.1%} {address:<{a_len}}".format(
                 p_len=self.probability_length[index],
                 a_len=self.address_length[index]+1,
-                address=apartment[0],
-                probability=apartment[1])
+                address=accommodation[0],
+                probability=accommodation[1])
 
             return f_a
 
-        def formatted_apartments() -> str:
+        def formatted_accommodations() -> str:
 
-            f_apartments = ''.join([formatted_apartment(index, apartment)
-                                    for index, apartment in
+            f_accommodations = ''.join([formatted_accommodation(index,
+                                                                accommodation)
+                                    for index, accommodation in
                                     enumerate(sorted(combination,
                                     key=lambda x: x[1], reverse=True))])
 
-            return f_apartments
+            return f_accommodations
 
         def all_fields() -> Generator[str, None, None]:
             yield formatted_index()
             yield formatted_probability()
-            yield formatted_apartments()
+            yield formatted_accommodations()
 
         print(' '.join(list(all_fields())))
 

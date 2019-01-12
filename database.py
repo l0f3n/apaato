@@ -1,18 +1,18 @@
 # database.py
 
-# Import sqlite3 to store apartments in a database
+# Import sqlite3 to store accommodations in a database
 import sqlite3
 
 # Import generator for annotations
 from typing import Generator
 
 # Import framework
-from apartment import Apartment
+from accommodation import Accommodation
 
 
-conn = sqlite3.connect('apartments.db')
+conn = sqlite3.connect('accommodations.db')
 c = conn.cursor()
-c.execute(""" CREATE TABLE IF NOT EXISTS apartments (
+c.execute(""" CREATE TABLE IF NOT EXISTS accommodations (
                 address text,
                 link text,
                 size text,
@@ -24,14 +24,14 @@ c.execute(""" CREATE TABLE IF NOT EXISTS apartments (
                 fifth integer) """)
 
 
-def insert_apartment(app: Apartment) -> None:
-    """ Inserts an Apartment object into the database """
+def insert_accommodation(app: Accommodation) -> None:
+    """ Inserts an Accommodation object into the database """
 
-    apartment_properties = {**app.__dict__, **(dict(zip(
+    accommodation_properties = {**app.__dict__, **(dict(zip(
                             ['first', 'second', 'third', 'fourth', 'fifth'],
                             app.queue_points_list)))}
     with conn:
-        c.execute(""" INSERT INTO apartments VALUES (:address,
+        c.execute(""" INSERT INTO accommodations VALUES (:address,
                                                      :link,
                                                      :size,
                                                      :applicants,
@@ -40,36 +40,36 @@ def insert_apartment(app: Apartment) -> None:
                                                      :third,
                                                      :fourth,
                                                      :fifth) """,
-                  apartment_properties)
+                  accommodation_properties)
 
 
-def all_apartments_in_database() -> Generator[Apartment, None, None]:
+def all_accommodations_in_database() -> Generator[Accommodation, None, None]:
     """ Make search query in the database for all the elements and yields them
-    as actual Apartment objects """
+    as Accommodation objects """
 
     with conn:
-        c.execute('SELECT * FROM apartments')
-        yield from map(to_apartment, c.fetchall())
+        c.execute('SELECT * FROM accommodations')
+        yield from map(to_accommodation, c.fetchall())
 
 
-def to_apartment(apartment_properties: tuple) -> Apartment:
-    """ Makes a new Apartment object from tuple from sql query """
+def to_accommodation(accommodation_properties: tuple) -> Accommodation:
+    """ Makes a new Accommodation object from tuple from sql query """
 
-    return Apartment(**to_dict(apartment_properties))
+    return Accommodation(**to_dict(accommodation_properties))
 
 
-def to_dict(apartment_properties: tuple) -> dict:
+def to_dict(accommodation_properties: tuple) -> dict:
     """ Takes tuple (from database) and zips it with the kwargs names of the
-    Apartment class """
+    Accommodation class """
 
     property_names = ['address', 'link', 'size', 'applicants']
 
-    return {**dict(zip(property_names, apartment_properties[:-5])),
-            'queue_points_list': list(apartment_properties[-5:])}
+    return {**dict(zip(property_names, accommodation_properties[:-5])),
+            'queue_points_list': list(accommodation_properties[-5:])}
 
 
 def wipe_database() -> None:
     """ Wipes database """
 
     with conn:
-        c.execute('DELETE FROM apartments')
+        c.execute('DELETE FROM accommodations')

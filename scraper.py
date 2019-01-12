@@ -12,15 +12,15 @@ from typing import Generator
 # from string import digits
 
 # Import framework
-from apartment import Apartment
+from accommodation import Accommodation
 
 
 # TODO: find their api and use that instead
 # TODO: makes this asynchronous
 
-def fetch_all_apartments() -> Generator[Apartment, None, None]:
+def fetch_all_accommodations() -> Generator[Accommodation, None, None]:
     """ Goes to studentbostader.se and gathers the information about all the
-    currently listed apartments """
+    currently listed accommodations """
 
     # Initialize headless driver
     options = webdriver.FirefoxOptions()
@@ -33,20 +33,21 @@ def fetch_all_apartments() -> Generator[Apartment, None, None]:
 
     driver.set_page_load_timeout(10)
 
-    # Finds all listed apartments and their links
-    apartments = driver.find_elements_by_class_name('noLinkcolor')[1:]
-    apartment_links = [a.get_attribute('href') for a in apartments]
+    # Finds all listed accommodations and their links
+    accommodations = driver.find_elements_by_class_name('noLinkcolor')[1:]
+    accommodation_links = [a.get_attribute('href') for a in accommodations]
 
-    yield len(apartment_links)
+    yield len(accommodation_links)
 
-    for link in apartment_links:
-        yield fetch_apartment(driver, link)
+    for link in accommodation_links:
+        yield fetch_accommodation(driver, link)
 
     driver.quit()
 
 
-def fetch_apartment(driver: webdriver, link: str) -> Apartment:
-    """ Gets information about a single apartment from link using webdriver """
+def fetch_accommodation(driver: webdriver, link: str) -> Accommodation:
+    """ Gets information about a single accommodation from link using
+    webdriver """
 
     def top_queue_points(text: str) -> list:
         applicants = number_of_applicants(text)
@@ -125,7 +126,7 @@ def fetch_apartment(driver: webdriver, link: str) -> Apartment:
         return driver.find_element_by_class_name("adress").text
 
 #    def furnished() -> bool:
-#        """ Returns whether the apartment is furnished or not """
+#        """ Returns whether the accommodation is furnished or not """
 #
 #        try:
 #            xpath = "//div[@class='PropertyItem Egenskap-1015']/span"
@@ -144,10 +145,10 @@ def fetch_apartment(driver: webdriver, link: str) -> Apartment:
         else:
             break
 
-    # Get text about the current apartment
+    # Get text about the current accommodation
     text = driver.find_element_by_xpath("//div[@class='col']/p").text
 
-    apartment_properties = {
+    accommodation_properties = {
             'address': address(),
             'link': link,
             **object_information(),
@@ -156,4 +157,4 @@ def fetch_apartment(driver: webdriver, link: str) -> Apartment:
             'queue_points_list': top_queue_points(text)
             }
 
-    return Apartment(**apartment_properties)
+    return Accommodation(**accommodation_properties)
