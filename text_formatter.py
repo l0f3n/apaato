@@ -63,8 +63,11 @@ class AccommodationListing:
                 accommodation=accommodation,
                 size_length=self.size_length)
 
-            f_link = "{accommodation.link}".format(
-                accommodation=accommodation)
+            base_link = "https://www.studentbostader.se/en/find-apartments/" + \
+                        "ledig-bostad?refid="
+            f_link = "{base_link}{accommodation.link}".format(
+                accommodation=accommodation,
+                base_link=base_link)
 
             return ' '.join([f_address, f_size, f_link])
 

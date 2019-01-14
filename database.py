@@ -14,7 +14,7 @@ conn = sqlite3.connect('accommodations.db')
 c = conn.cursor()
 c.execute(""" CREATE TABLE IF NOT EXISTS accommodations (
                 address text,
-                link text,
+                refid text,
                 size text,
                 date text,
                 applicants integer,
@@ -33,7 +33,7 @@ def insert_accommodation(app: Accommodation) -> None:
                             app.queue_points_list)))}
     with conn:
         c.execute(""" INSERT INTO accommodations VALUES (:address,
-                                                     :link,
+                                                     :refid,
                                                      :size,
                                                      :date,
                                                      :applicants,

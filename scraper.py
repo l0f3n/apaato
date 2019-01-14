@@ -1,149 +1,122 @@
 # scraper.py
 
-# Import selenium for webscraping
+# Import selenium to gather the refids for the accommodations
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import TimeoutException
+
+# Import requests to use studentbostaders API
+import requests
+
+# Import json to parse response from studentbostaders API
+import json
+
+# Import bs4 to parse html from studentbostaders API
+from bs4 import BeautifulSoup as bs
 
 # Import Generator for annotations
 from typing import Generator
 
+# Import re to find number of applcaints and queue points
 import re
-
-# Import digits for parsing
-# from string import digits
 
 # Import framework
 from accommodation import Accommodation
 
 
-# TODO: find their api and use that instead
-# TODO: makes this asynchronous
-
-def fetch_all_accommodations() -> Generator[Accommodation, None, None]:
+# TODO: make this asynchronous
+def fetch_all_accommodations():
     """ Goes to studentbostader.se and gathers the information about all the
-    currently listed accommodations """
+    currently listed apartments """
 
     # Initialize headless driver
     options = webdriver.FirefoxOptions()
     options.add_argument('--headless')
     driver = webdriver.Firefox(firefox_options=options)
 
-    start_page = "https://www.studentbostader.se/sv/sok-bostad/" + \
-                 "lediga-bostader?pagination=0&paginationantal=1000"
+    # Go to page with all apartments
+    start_page = "https://www.studentbostader.se/en/find-apartments/search-apartments?pagination=0&paginationantal=10000"
     driver.get(start_page)
 
-    driver.set_page_load_timeout(10)
-
-    # Finds all listed accommodations and their links
+    # Find refids to all accommodations
     accommodations = driver.find_elements_by_class_name('noLinkcolor')[1:]
-    accommodation_links = [a.get_attribute('href') for a in accommodations]
+    accommodation_links = (a.get_attribute('href') for a in accommodations)
+    refids = [link[link.index('=')+1:] for link in accommodation_links]
 
-    yield len(accommodation_links)
+    # Yield total amount of accommodations
+    yield len(refids)
 
-    for link in accommodation_links:
-        yield fetch_accommodation(driver, link)
+    # Get information about every accommodation
+    for refid in refids:
+        yield fetch_accommodation(refid)
 
     driver.quit()
 
+def fetch_accommodation(refid: str) -> dict:
+    """ Gathers all information about an accommodation using its refid """
 
-def fetch_accommodation(driver: webdriver, link: str) -> Accommodation:
-    """ Gets information about a single accommodation from link using
-    webdriver """
+    # Store information about a single accommodation
+    accommodation_properties = {}
+    accommodation_properties['refid'] = refid
 
-    def address() -> str:
-        return driver.find_element_by_class_name("adress").text
+    # Use their API to get information about accommodation
+    r = requests.get('https://marknad.studentbostader.se/widgets/?refid={0}&callback=&widgets[]=koerochprenumerationer@STD&widgets[]=objektinformation@lagenheter&widgets[]=objektforegaende&widgets[]=objektnasta&widgets[]=objektbilder&widgets[]=objektfritext&widgets[]=objektinformation@lagenheter&widgets[]=objektegenskaper&widgets[]=objektdokument&widgets[]=alert&widgets[]=objektintresse&widgets[]=objektintressestatus&widgets[]=objektkarta&_=1545230378811'.format(refid))
 
-    def last_application_date():
-        text = driver.find_element_by_class_name("IntresseMeddelande").text
-        return text[25:35]
+    # Create dictionary
+    dict_ = json.loads(r.text[1:-2])['html']
 
-    def object_information() -> dict:
-        xpath = "//div[@class='objektinformation']/table/tbody/tr"
-        elems = driver.find_elements_by_xpath(xpath)
+    #######################################
+    ##### Queue points and applicants #####
+    #######################################
 
-        tuple_elems = [elem.text.split(' ', 1) for elem in elems]
+    # Access text about queue points and number of applicants
+    interest_status_text = dict_['objektintressestatus']
 
-        dict_ = {}
+    # Pattern will match a dot followed by one or more spaces or digits
+    # example: 1 230, 233, 73, 27
+    queue_points_pattern = re.compile(r' ([\d ]+)')
 
-#        area = tuple_elems[0][1]
-#        dict_['area'] = area
-#
-        size = tuple_elems[1][1]
-        dict_['size'] = size
-#
-#        space = float(''.join(
-#                       c for c in tuple_elems[2][1] if c in digits+'.'))
-#        dict_['space'] = space
-#
-#        rent = int(''.join(c for c in tuple_elems[3][1] if c in digits))
-#        dict_['rent'] = rent
-#
-#        floor = tuple_elems[4][1][0]
-#        dict_['floor'] = floor
-#
-#        has_elevator = tuple_elems[5][1] == 'Ja'
-#        dict_['elevator'] = has_elevator
-#
-#        date = int(''.join(c for c in tuple_elems[6][1] if c in digits))
-#        dict_['available_date'] = date
-#
-        return dict_
+    # Create a list of all the matches without leading space
+    matches = queue_points_pattern.findall(interest_status_text)
 
-    def number_of_applicants(text: str) -> int:
-        try:
-            return int(text[text.index('v')+2:text.index('v')+4])
-        except ValueError:
-            return 0
+    # The first match is the number of applicants
+    number_of_applicants = matches.pop(0)
+    accommodation_properties['applicants'] = number_of_applicants
 
-    def top_queue_points(text: str) -> list:
+    # Remove whitespace and convert all matches to ints, right pad the list
+    # with zeros to make it length 5.
+    queue_points_list = [int(matches[i].replace(' ', ''))
+                         if i < len(matches) else 0 for i in range(5)]
+    accommodation_properties['queue_points_list'] = queue_points_list
 
-        # Pattern will match a dot followed by one or more spaces or digits
-        # example: . 1 230, . 233, . 73
-        queue_points_pattern = re.compile(r'\.([\d ]+)')
+    ##############################################
+    ##### Latest application acceptance date #####
+    ##############################################
 
-        # Create a list of all the matches without the leading dot
-        matches = queue_points_pattern.findall(text)
+    # Access text about latest application acceptance date
+    interest_text = dict_['objektintresse']
 
-        # Remove whitespace and convert all matches to ints, right pad the list
-        # with zeros to make it length 5
-        queue_points_list = [int(matches[i].replace(' ', ''))
-                             if i < len(matches) else 0 for i in range(5)]
+    # Create BeautifulSoup object
+    soup = bs(interest_text, 'lxml')
 
-        return queue_points_list
+    # Find latest application acceptance date
+    date = soup.find('div', class_='IntresseMeddelande').text[25:35]
+    accommodation_properties['date'] = date
 
+    ############################
+    ##### Address and size #####
+    ############################
 
-#    def furnished() -> bool:
-#        """ Returns whether the accommodation is furnished or not """
-#
-#        try:
-#            xpath = "//div[@class='PropertyItem Egenskap-1015']/span"
-#            driver.find_element_by_xpath(xpath)
-#        except NoSuchElementException:
-#            return False
-#        else:
-#            return True
+    # Access text about address, size, rent, etc.
+    object_text = dict_['objektinformation@lagenheter']
 
-    # Make sure that the link does not timeout
-    while True:
-        try:
-            driver.get(link)
-        except TimeoutException:
-            continue
-        else:
-            break
+    # Create BeautifulSoup object
+    soup = bs(object_text, 'lxml')
 
-    # Get text about the current accommodation
-    interest_text = driver.find_element_by_xpath("//div[@class='col']/p").text
+    # Find address
+    address = soup.find('dd', class_='ObjektAdress').text
+    accommodation_properties['address'] = address
 
-    accommodation_properties = {
-            'address': address(),
-            'link': link,
-            'date': last_application_date(),
-            **object_information(),
-            # 'furnished': furnished(),
-            'applicants': number_of_applicants(interest_text),
-            'queue_points_list': top_queue_points(interest_text)
-            }
+    # Find size
+    size = soup.find('dd', class_='ObjektTyp').text
+    accommodation_properties['size'] = size
 
     return Accommodation(**accommodation_properties)
