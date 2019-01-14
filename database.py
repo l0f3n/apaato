@@ -45,13 +45,6 @@ def insert_accommodation(app: Accommodation) -> None:
                   accommodation_properties)
 
 
-def all_accommodations() -> Generator[Accommodation, None, None]:
-    """ Make search query in the database for all the elements and yields them
-    as Accommodation objects """
-
-    yield from query('SELECT * FROM accommodations')
-
-
 def to_accommodation(accommodation_properties: tuple) -> Accommodation:
     """ Makes a new Accommodation object from tuple from sql query """
 

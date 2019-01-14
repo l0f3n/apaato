@@ -150,7 +150,7 @@ class CombintationListing:
             return f_probability
 
         def formatted_accommodation(index, accommodation):
-            f_a = "{probability:>{p_len}.1%} {address:<{a_len}}".format(
+            f_a = " {probability:>{p_len}.1%} {address:<{a_len}}".format(
                 p_len=self.probability_length[index],
                 a_len=self.address_length[index]+1,
                 address=accommodation[0],

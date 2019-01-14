@@ -47,8 +47,15 @@ def list_accommodations(queue_points: int) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
-    # Gets all the accommodations from the database
-    accommodations = list(database.query('SELECT * FROM accommodations'))
+    # Finds the earliest latest application acceptance date
+    earliest_date = min(datetime.strptime(accommodation.date, '%Y-%m-%d')
+                        for accommodation
+                        in database.query('SELECT * FROM accommodations'))
+
+    # Only list the relevant apartments
+    date = earliest_date.strftime('%Y-%m-%d')
+    search = "SELECT * FROM accommodations WHERE date LIKE '{}'".format(date)
+    accommodations = list(database.query(search))
 
     tf = text_formatter.AccommodationListing(accommodations, queue_points)
     tf.print()
@@ -69,11 +76,9 @@ def simulate(other_points: int) -> None:
         return
 
     # Finds the earliest latest application acceptance date
-    earliest_date = datetime.strptime('9999-12-31', '%Y-%m-%d')
-    for accommodation in database.all_accommodations():
-        d = datetime.strptime(accommodation.date, '%Y-%m-%d')
-        if d < earliest_date:
-            earliest_date = d
+    earliest_date = min(datetime.strptime(accommodation.date, '%Y-%m-%d')
+                        for accommodation
+                        in database.query('SELECT * FROM accommodations'))
 
     # Only simulate with the apartments that have the earliest latest
     # application acceptance date
@@ -81,7 +86,6 @@ def simulate(other_points: int) -> None:
     search = "SELECT * FROM accommodations WHERE date LIKE '{}'".format(date)
     accommodations = list(database.query(search))
 
-    # Make the generator and call next once to get the total
     simulation_gen = simulation.run_simulation(other_points, accommodations)
     total = next(simulation_gen)
 
