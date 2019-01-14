@@ -8,6 +8,8 @@ from selenium.common.exceptions import TimeoutException
 # Import Generator for annotations
 from typing import Generator
 
+import re
+
 # Import digits for parsing
 # from string import digits
 
@@ -95,39 +97,21 @@ def fetch_accommodation(driver: webdriver, link: str) -> Accommodation:
             return 0
 
     def top_queue_points(text: str) -> list:
-        applicants = number_of_applicants(text)
 
-        try:
-            queue_points_in_text = text[text.index(':'):]
-        except ValueError:
-            visible_queue_points = 0
+        # Pattern will match a dot followed by one or more spaces or digits
+        # example: . 1 230, . 233, . 73
+        queue_points_pattern = re.compile(r'\.([\d ]+)')
 
-        queue_points_list = []
+        # Create a list of all the matches without the leading dot
+        matches = queue_points_pattern.findall(text)
 
-        visible_queue_points = min(applicants, 5)
-        for _ in range(visible_queue_points):
-            begin = queue_points_in_text.index('.') + 2
-            try:
-                # Get end of queue points
-                end = queue_points_in_text[begin:].index('.') - 2 + begin
-            except ValueError:
-                # If on last person in queue
-                queue_points = queue_points_in_text[begin:]
-            else:
-                # Store queue points
-                queue_points = queue_points_in_text[begin:end]
-                # Removes queue points just stored from string
-                queue_points_in_text = queue_points_in_text[end + 2:]
-
-            # Remove whitespace from queue points and convert to int
-            queue_points = int(queue_points.replace(' ', ''))
-
-            queue_points_list.append(queue_points)
-
-        # Make length of list always five to match database
-        queue_points_list.extend([0]*(5-visible_queue_points))
+        # Remove whitespace and convert all matches to ints, right pad the list
+        # with zeros to make it length 5
+        queue_points_list = [int(matches[i].replace(' ', ''))
+                             if i < len(matches) else 0 for i in range(5)]
 
         return queue_points_list
+
 
 #    def furnished() -> bool:
 #        """ Returns whether the accommodation is furnished or not """
