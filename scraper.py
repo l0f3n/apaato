@@ -22,6 +22,9 @@ import re
 from accommodation import Accommodation
 
 
+API = 'https://marknad.studentbostader.se/widgets/?refid={}&callback=&widgets[]=koerochprenumerationer@STD&widgets[]=objektinformation@lagenheter&widgets[]=objektforegaende&widgets[]=objektnasta&widgets[]=objektbilder&widgets[]=objektfritext&widgets[]=objektinformation@lagenheter&widgets[]=objektegenskaper&widgets[]=objektdokument&widgets[]=alert&widgets[]=objektintresse&widgets[]=objektintressestatus&widgets[]=objektkarta&_=1545230378811'
+
+
 # TODO: make this asynchronous
 def fetch_all_accommodations():
     """ Goes to studentbostader.se and gathers the information about all the
@@ -58,7 +61,7 @@ def fetch_accommodation(refid: str) -> dict:
     accommodation_properties['refid'] = refid
 
     # Use their API to get information about accommodation
-    r = requests.get('https://marknad.studentbostader.se/widgets/?refid={0}&callback=&widgets[]=koerochprenumerationer@STD&widgets[]=objektinformation@lagenheter&widgets[]=objektforegaende&widgets[]=objektnasta&widgets[]=objektbilder&widgets[]=objektfritext&widgets[]=objektinformation@lagenheter&widgets[]=objektegenskaper&widgets[]=objektdokument&widgets[]=alert&widgets[]=objektintresse&widgets[]=objektintressestatus&widgets[]=objektkarta&_=1545230378811'.format(refid))
+    r = requests.get(API.format(refid))
 
     # Create dictionary
     dict_ = json.loads(r.text[1:-2])['html']
