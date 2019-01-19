@@ -55,8 +55,8 @@ def run_simulation(other_points: int, accommodations: list) -> dict:
             for u_accommodation in u_combination:
                 if not u_accommodation in current_combination:
                     break
-                else:
-                    return False
+            else:
+                return False
 
         return True
 
