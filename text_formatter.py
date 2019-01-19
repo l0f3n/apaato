@@ -13,7 +13,7 @@ class AccommodationListing:
     def __init__(self, accommodations: list, queue_points: int):
         self.accommodations = sorted(accommodations, key=lambda x:
                                  (x.position_in_queue(queue_points),
-                                  x.applicants))
+                                  x.queue_points_list[4]))
 
         self.queue_points = queue_points
         self.address_length = 0
