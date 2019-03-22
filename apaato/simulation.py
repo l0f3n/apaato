@@ -1,8 +1,5 @@
 # simulation.py
 
-# Maybe simulate what happens if every person has a one percent chance of
-# declining an offer
-
 import random
 import copy
 import itertools
@@ -18,7 +15,7 @@ def run_simulation(other_points: int, accommodations: list) -> dict:
     """ Runs simulation for every combination of accommodations that is
     desired """
 
-    def total_chance(combination):
+    def total_chance(combination: list) -> float:
         """ Returns the total chance of getting any accommodation at all from
         combination """
 
@@ -26,13 +23,12 @@ def run_simulation(other_points: int, accommodations: list) -> dict:
 
     def filter_accommodations(accommodations: list,
                               other_points: int) -> filter:
-        """ Returns a filter object of all accommodations that the user wants to
-        apply for """
+        """ Returns a filter object of all accommodations that the user wants
+        to apply for """
 
         def inner_filter(a: Accommodation) -> bool:
 
-            pos = a.position_in_queue(other_points)
-            return pos not in [6]  # and a.size == '1 rum'
+            return a.size == '1 rum'
 
         return filter(inner_filter, accommodations)
 
@@ -53,7 +49,7 @@ def run_simulation(other_points: int, accommodations: list) -> dict:
             # If all accommodations in an unnecessary combination is in current
             # combination then its unnecessary to run simulation
             for u_accommodation in u_combination:
-                if not u_accommodation in current_combination:
+                if u_accommodation not in current_combination:
                     break
             else:
                 return False
@@ -106,10 +102,10 @@ def run_simulation(other_points: int, accommodations: list) -> dict:
 
             # Run many simulations with current combination
             res = list(do_simulations(accommodations_copy, current_combination,
-                                 other_points).items())
+                                      other_points).items())
 
             chance = total_chance(res)
-            if chance == 0 or chance >= 1:
+            if chance == 0 or abs(chance-1) <= 1/(1000):
                 u_combinations.append(current_combination)
 
             yield current, res
@@ -175,10 +171,10 @@ def simulate(accommodations: list) -> list:
                     potential_accommodations[points] = [accommodation_index]
 
         # For every person and the accommodations they could get
-        for points, potential_accommodation in potential_accommodations.items():
+        for points, accommodation in potential_accommodations.items():
 
             # Choose one of the accommodations randomly
-            chosen_accommodation_index = random.choice(potential_accommodation)
+            chosen_accommodation_index = random.choice(accommodation)
 
             # Add accommodations to not available accommodations
             occupied_accommodations.add(chosen_accommodation_index)

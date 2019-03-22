@@ -53,6 +53,7 @@ def fetch_all_accommodations():
 
     driver.quit()
 
+
 def fetch_accommodation(refid: str) -> dict:
     """ Gathers all information about an accommodation using its refid """
 
@@ -65,6 +66,7 @@ def fetch_accommodation(refid: str) -> dict:
 
     # Create dictionary
     dict_ = json.loads(r.text[1:-2])['html']
+
 
     #######################################
     ##### Queue points and applicants #####
@@ -90,6 +92,7 @@ def fetch_accommodation(refid: str) -> dict:
                          if i < len(matches) else 0 for i in range(5)]
     accommodation_properties['queue_points_list'] = queue_points_list
 
+
     ##############################################
     ##### Latest application acceptance date #####
     ##############################################
@@ -103,6 +106,7 @@ def fetch_accommodation(refid: str) -> dict:
     # Find latest application acceptance date
     date = soup.find('div', class_='IntresseMeddelande').text[25:35]
     accommodation_properties['date'] = date
+
 
     ############################
     ##### Address and size #####

@@ -10,19 +10,24 @@ from typing import Generator
 from accommodation import Accommodation
 
 
-conn = sqlite3.connect('accommodations.db')
-c = conn.cursor()
-c.execute(""" CREATE TABLE IF NOT EXISTS accommodations (
-                address text,
-                refid text,
-                size text,
-                date text,
-                applicants integer,
-                first integer,
-                second integer,
-                third integer,
-                fourth integer,
-                fifth integer) """)
+def setup():
+    """ Setup database """
+
+    global conn, c
+
+    conn = sqlite3.connect('accommodations.db')
+    c = conn.cursor()
+    c.execute(""" CREATE TABLE IF NOT EXISTS accommodations (
+                    address text,
+                    refid text,
+                    size text,
+                    date text,
+                    applicants integer,
+                    first integer,
+                    second integer,
+                    third integer,
+                    fourth integer,
+                    fifth integer) """)
 
 
 def insert_accommodation(app: Accommodation) -> None:
@@ -55,14 +60,15 @@ def to_dict(accommodation_properties: tuple) -> dict:
     """ Takes tuple (from database) and zips it with the kwargs names of the
     Accommodation class """
 
-    property_names = ['address', 'link', 'size', 'date', 'applicants']
+    property_names = ['address', 'refid', 'size', 'date', 'applicants']
 
     return {**dict(zip(property_names, accommodation_properties[:-5])),
             'queue_points_list': list(accommodation_properties[-5:])}
 
 
 def query(query_text: str) -> Generator[Accommodation, None, None]:
-    """ Takes a search query and yields all results as Accommodation objects """
+    """ Takes a search query and yields all results as Accommodation
+    objects """
 
     with conn:
         c.execute(query_text)

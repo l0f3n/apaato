@@ -12,8 +12,8 @@ class AccommodationListing:
 
     def __init__(self, accommodations: list, queue_points: int):
         self.accommodations = sorted(accommodations, key=lambda x:
-                                 (x.position_in_queue(queue_points),
-                                  x.queue_points_list[4]))
+                                     (x.position_in_queue(queue_points),
+                                      x.queue_points_list[4]))
 
         self.queue_points = queue_points
         self.address_length = 0
@@ -63,9 +63,9 @@ class AccommodationListing:
                 accommodation=accommodation,
                 size_length=self.size_length)
 
-            base_link = "https://www.studentbostader.se/en/find-apartments/" + \
-                        "ledig-bostad?refid="
-            f_link = "{base_link}{accommodation.link}".format(
+            base_link = ("https://www.studentbostader.se/en/find-apartments/"
+                         "ledig-bostad?refid=")
+            f_link = "{base_link}{accommodation.refid}".format(
                 accommodation=accommodation,
                 base_link=base_link)
 
@@ -131,7 +131,8 @@ class CombintationListing:
         return len(f_probability)
 
     def total_probability(self, combination):
-        """ Returns the chance of getting any accommodation from combination """
+        """ Returns the chance of getting any accommodation from
+        combination """
 
         return sum((accommodation[1] for accommodation in combination))
 
@@ -165,9 +166,9 @@ class CombintationListing:
 
             f_accommodations = ''.join([formatted_accommodation(index,
                                                                 accommodation)
-                                    for index, accommodation in
-                                    enumerate(sorted(combination,
-                                    key=lambda x: x[1], reverse=True))])
+                                        for index, accommodation in
+                                        enumerate(sorted(combination,
+                                        key=lambda x: x[1], reverse=True))])
 
             return f_accommodations
 

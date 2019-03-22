@@ -20,6 +20,7 @@ import scraper
 import simulation
 import text_formatter
 
+database.setup()
 
 def load_accommodations() -> None:
     """ Loads all accommodations from studentbostader.se into the database """
@@ -71,8 +72,8 @@ def simulate(other_points: int) -> None:
 
     # Check that the queue_points are unique
     if other_points in unique_queue_points:
-        print("Unable to simulate with '" + str(other_points) + "' points. " + \
-        "Points must be unique.")
+        print("Unable to simulate with '" + str(other_points) + "' points. " +
+              "Points must be unique.")
         return
 
     # Finds the earliest latest application acceptance date
