@@ -105,7 +105,7 @@ def run_simulation(other_points: int, accommodations: list) -> dict:
                                       other_points).items())
 
             chance = total_chance(res)
-            if chance == 0 or abs(chance-1) <= 1/(1000):
+            if chance == 0 or math.isclose(chance, 1):
                 u_combinations.append(current_combination)
 
             yield current, res
