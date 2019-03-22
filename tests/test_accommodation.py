@@ -2,11 +2,7 @@
 
 import unittest
 
-# Insert parent directory to PATH in order to import accommodation
-import sys
-sys.path.insert(0, './apaato/')
-
-from accommodation import Accommodation
+from apaato.accommodation import Accommodation
 
 
 class TestAccommodation(unittest.TestCase):

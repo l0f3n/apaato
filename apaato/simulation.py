@@ -8,8 +8,8 @@ import functools
 import math
 
 # Import framework
-import database
-from accommodation import Accommodation
+import apaato.database
+from apaato.accommodation import Accommodation
 
 
 def run_simulation(other_points: int, accommodations: list,

@@ -5,12 +5,8 @@ import unittest
 import random
 import math
 
-# Insert parent directory to PATH in order to import accommodation
-import sys
-sys.path.insert(0, './apaato/')
-
-import simulation
-from accommodation import Accommodation
+import apaato.simulation as simulation
+from apaato.accommodation import Accommodation
 
 
 class TestSimulation(unittest.TestCase):

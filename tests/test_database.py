@@ -5,12 +5,8 @@ import unittest
 import os
 import sqlite3
 
-# Insert parent directory to PATH in order to import accommodation
-import sys
-sys.path.insert(0, './apaato/')
-
-import database
-from accommodation import Accommodation
+import apaato.database as database
+from apaato.accommodation import Accommodation
 
 
 class TestDatabase(unittest.TestCase):

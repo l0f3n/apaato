@@ -7,7 +7,7 @@ import sqlite3
 from typing import Generator
 
 # Import framework
-from accommodation import Accommodation
+from apaato.accommodation import Accommodation
 
 
 def setup():
