@@ -44,7 +44,7 @@ def load_accommodations() -> None:
         time=time.time() - start_time))
 
 
-def list_accommodations(queue_points: int) -> None:
+def list_accommodations(queue_points: int, show_link: bool = False) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
@@ -58,7 +58,8 @@ def list_accommodations(queue_points: int) -> None:
     search = "SELECT * FROM accommodations WHERE date LIKE '{}'".format(date)
     accommodations = list(database.query(search))
 
-    tf = text_formatter.AccommodationListing(accommodations, queue_points)
+    tf = text_formatter.AccommodationListing(accommodations, queue_points,
+                                             show_link)
     tf.print()
 
 

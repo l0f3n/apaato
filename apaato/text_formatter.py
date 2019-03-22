@@ -10,14 +10,18 @@ from accommodation import Accommodation
 class AccommodationListing:
     """ Class that handles the printing of the accommodations """
 
-    def __init__(self, accommodations: list, queue_points: int):
+    def __init__(self, accommodations: list, queue_points: int,
+                 show_link: bool):
+
         self.accommodations = sorted(accommodations, key=lambda x:
                                      (x.position_in_queue(queue_points),
-                                      x.queue_points_list[4]))
+                                      x.queue_points_list[-1]))
 
         self.queue_points = queue_points
         self.address_length = 0
         self.size_length = 0
+
+        self.show_link = show_link
 
         self.calculate_padding()
 
@@ -67,7 +71,7 @@ class AccommodationListing:
                          "ledig-bostad?refid=")
             f_link = "{base_link}{accommodation.refid}".format(
                 accommodation=accommodation,
-                base_link=base_link)
+                base_link=base_link) if self.show_link else ""
 
             return ' '.join([f_address, f_size, f_link])
 
