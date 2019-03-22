@@ -5,13 +5,15 @@ import copy
 import itertools
 import operator as op
 import functools
+import math
 
 # Import framework
 import database
 from accommodation import Accommodation
 
 
-def run_simulation(other_points: int, accommodations: list) -> dict:
+def run_simulation(other_points: int, accommodations: list,
+                   filter_: list) -> dict:
     """ Runs simulation for every combination of accommodations that is
     desired """
 
@@ -28,7 +30,7 @@ def run_simulation(other_points: int, accommodations: list) -> dict:
 
         def inner_filter(a: Accommodation) -> bool:
 
-            return a.size == '1 rum'
+            return a.size in filter_
 
         return filter(inner_filter, accommodations)
 

@@ -62,7 +62,7 @@ def list_accommodations(queue_points: int) -> None:
     tf.print()
 
 
-def simulate(other_points: int) -> None:
+def simulate(other_points: int, filter_: list = ['1 rum']) -> None:
     """ Runs simulation with other points and saves result in database """
 
     # Make a set of all the different points that are in the queues
@@ -87,7 +87,8 @@ def simulate(other_points: int) -> None:
     search = "SELECT * FROM accommodations WHERE date LIKE '{}'".format(date)
     accommodations = list(database.query(search))
 
-    simulation_gen = simulation.run_simulation(other_points, accommodations)
+    simulation_gen = simulation.run_simulation(other_points, accommodations,
+                                               filter_)
     total = next(simulation_gen)
 
     # Store all results from simulation
