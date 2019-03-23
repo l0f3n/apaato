@@ -76,9 +76,6 @@ def run_simulation(other_points: int, accommodations: list,
     # having that accommodation in them or not
     u_combinations = []
 
-    # Keeps track of which simulation is running
-    current = 0
-
     for number in range(1, count+1):
 
         # Find all combinations of all desired accommodations
@@ -86,7 +83,6 @@ def run_simulation(other_points: int, accommodations: list,
 
         # For every combination of accommodations
         for current_combination in combinations:
-            current += 1
 
             # If it is necessary to test this combination
             if not run_iteration():
@@ -110,7 +106,7 @@ def run_simulation(other_points: int, accommodations: list,
             if chance == 0 or math.isclose(chance, 1):
                 u_combinations.append(current_combination)
 
-            yield current, res
+            yield res
 
 
 def do_simulations(accommodations: list, combination: list,

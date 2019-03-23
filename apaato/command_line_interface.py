@@ -21,16 +21,13 @@ def load_wrapper(args):
     commands.load_accommodations()
 
 
-def sim_wrapper(args):
-    commands.simulate(args.points, filter_=args.filter)
-
-
 def accommodations_wrapper(args):
     commands.list_accommodations(args.points, show_link=args.link)
 
 
-def probabilities_wrapper(args):
-    commands.list_probabilites()
+def simulation_wrapper(args):
+    combinations = commands.simulate(args.points, filter_=args.filter)
+    commands.list_probabilites(combinations)
 
 
 def main():
@@ -45,25 +42,8 @@ def main():
     load_parser.set_defaults(func=load_wrapper)
 
 
-    # sim
-    sim_parser = subparsers.add_parser("sim")
-    sim_parser.add_argument('points',
-                            type=int,
-                            help='the amount of points to simulate with',)
-
-    sim_parser.add_argument('-f', '--filter',
-                             type=str,
-                             help='what type of apartments to apply for',)
-
-    sim_parser.set_defaults(func=sim_wrapper, filter='1 rum')
-
-
-    # list #
-    list_parser = subparsers.add_parser("list")
-    list_subparser = list_parser.add_subparsers()
-
     # accommodations
-    acc_parser = list_subparser.add_parser("accommodations")
+    acc_parser = subparsers.add_parser("accommodations")
 
     acc_parser.add_argument('points',
                             type=int,
@@ -75,9 +55,20 @@ def main():
 
     acc_parser.set_defaults(func=accommodations_wrapper)
 
-    # probabilities
-    prob_parser = list_subparser.add_parser("probabilites")
-    prob_parser.set_defaults(func=probabilities_wrapper)
+
+    # simulation
+    sim_parser = subparsers.add_parser("simulate")
+
+    sim_parser.add_argument('points',
+                            type=int,
+                            help='the amount of points to simulate with',)
+
+    sim_parser.add_argument('-s', '--size',
+                            type=str,
+                            help="what size of accommodation to apply for. \
+                            (eg. 'Korridorrum', '1 rum' etc.)",)
+
+    sim_parser.set_defaults(func=simulation_wrapper, filter='1 rum')
 
     clargs = parser.parse_args()
 

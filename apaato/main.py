@@ -81,31 +81,28 @@ def simulate(other_points: int, filter_: list = ['1 rum']) -> None:
     total = next(simulation_gen)
 
     # Store all results from simulation
-    global combintations
-    combintations = []
+    combinations = []
 
     start_time = time.time()
 
-    for current, result in simulation_gen:
-        print(result)
-        combintations.append(result)
+    for current, result in enumerate(simulation_gen):
+        combinations.append(result)
 
-        #os.system('cls' if os.name == 'nt' else 'clear') # Windows / Unix
+        os.system('cls' if os.name == 'nt' else 'clear') # Windows / Unix
         print('{current} / {total}'.format(
-            current=current,
+            current=current+1,
             total=total))
 
     print('Finished in {time:.3f} seconds'.format(
         time=time.time() - start_time))
 
+    return combinations
 
-def list_probabilites():
+
+def list_probabilites(combinations):
     """ Print all combinations sorted by the chance of getting any of the
     accommodations in that combination """
 
-    try:
-        tf = text_formatter.CombintationListing(combintations)
-        tf.print()
-    except NameError:
-        print("Please run 'simulate()' first.")
+    tf = text_formatter.CombintationListing(combinations)
+    tf.print()
 
