@@ -9,7 +9,9 @@ Copy this repository and install using `pip3 install \path\to\apaato`.
 
 ## Usage
 `apaato load`: loads all accommodations into a database.
+
 `apaato accommodations`: lists all the accommodations with all earliest latest application acceptance date.
+
 `apaato simulate`: lists the probabilities of getting an accommodation.
 
 For more options, use the `-h` flag.
