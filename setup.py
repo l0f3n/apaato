@@ -13,7 +13,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'apaato=apaato.main:main',
+            'apaato=apaato.command_line_interface:main',
         ],
     },
 )
