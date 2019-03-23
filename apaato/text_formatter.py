@@ -13,9 +13,13 @@ class AccommodationListing:
     def __init__(self, accommodations: list, queue_points: int,
                  show_link: bool):
 
-        self.accommodations = sorted(accommodations, key=lambda x:
-                                     (x.position_in_queue(queue_points),
-                                      x.queue_points_list[-1]))
+        if not queue_points:
+            self.accommodations = sorted(accommodations, key=lambda x:
+                                         x.address[0])
+        else:
+            self.accommodations = sorted(accommodations, key=lambda x:
+                                         (x.position_in_queue(queue_points),
+                                         x.queue_points_list[-1]))
 
         self.queue_points = queue_points
         self.address_length = 0
@@ -54,7 +58,8 @@ class AccommodationListing:
 
         def formatted_position() -> str:
             f_position = "{position}".format(
-                position=accommodation.position_in_queue(self.queue_points))
+                position=accommodation.position_in_queue(self.queue_points)) \
+            if self.queue_points else ""
 
             return f_position
 

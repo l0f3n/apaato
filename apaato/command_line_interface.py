@@ -22,7 +22,8 @@ def load_wrapper(args):
 
 
 def accommodations_wrapper(args):
-    commands.list_accommodations(args.points, show_link=args.link)
+    commands.list_accommodations(queue_points=args.points,
+                                 show_link=args.link,)
 
 
 def simulation_wrapper(args):
@@ -46,15 +47,16 @@ def main():
     # accommodations
     acc_parser = subparsers.add_parser("accommodations")
 
-    acc_parser.add_argument('points',
+    acc_parser.add_argument('-p', '--points',
                             type=int,
-                            help='the amount of points to sort by',)
+                            help='provide your points to sort by your \
+                            position in queue',)
 
     acc_parser.add_argument('-l', '--link',
                             help='if present, show link to accommodation',
                             action='store_true',)
 
-    acc_parser.set_defaults(func=accommodations_wrapper)
+    acc_parser.set_defaults(func=accommodations_wrapper, points=0)
 
 
     # simulation

@@ -34,7 +34,7 @@ def load_accommodations() -> None:
         time=time.time() - start_time))
 
 
-def list_accommodations(queue_points: int, show_link: bool = False) -> None:
+def list_accommodations(queue_points: int = 0, show_link: bool = False) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
