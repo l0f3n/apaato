@@ -13,7 +13,7 @@ from apaato.accommodation import Accommodation
 
 
 def run_simulation(other_points: int, accommodations: list,
-                   filter_: list) -> dict:
+                   size: list = '1 rum', n: int = 1000) -> dict:
     """ Runs simulation for every combination of accommodations that is
     desired """
 
@@ -30,7 +30,7 @@ def run_simulation(other_points: int, accommodations: list,
 
         def inner_filter(a: Accommodation) -> bool:
 
-            return a.size in filter_
+            return a.size in size
 
         return filter(inner_filter, accommodations)
 
@@ -100,7 +100,7 @@ def run_simulation(other_points: int, accommodations: list,
 
             # Run many simulations with current combination
             res = list(do_simulations(accommodations_copy, current_combination,
-                                      other_points).items())
+                                      other_points, n).items())
 
             chance = total_chance(res)
             if chance == 0 or math.isclose(chance, 1):
@@ -110,7 +110,7 @@ def run_simulation(other_points: int, accommodations: list,
 
 
 def do_simulations(accommodations: list, combination: list,
-                   other_points: int, n: int = 1000) -> dict:
+                   other_points: int, n: int) -> dict:
     """ Runs simulation of accommodations n number of times and returns a
     dictionary with {address, [(points, chance), ...]} that gives the chance
     for person with points to get the accommodation at address """

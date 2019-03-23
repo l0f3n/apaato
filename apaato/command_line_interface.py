@@ -26,7 +26,8 @@ def accommodations_wrapper(args):
 
 
 def simulation_wrapper(args):
-    combinations = commands.simulate(args.points, filter_=args.filter)
+    combinations = commands.simulate(args.points, size=args.size,
+                                     n=args.num)
     commands.list_probabilites(combinations)
 
 
@@ -68,7 +69,12 @@ def main():
                             help="what size of accommodation to apply for. \
                             (eg. 'Korridorrum', '1 rum' etc.)",)
 
-    sim_parser.set_defaults(func=simulation_wrapper, filter='1 rum')
+    sim_parser.add_argument('-n', '--num',
+                            type=int,
+                            help="how many simulation to run per combination",)
+
+
+    sim_parser.set_defaults(func=simulation_wrapper, size='1 rum', num=1000)
 
     clargs = parser.parse_args()
 

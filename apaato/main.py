@@ -52,7 +52,8 @@ def list_accommodations(queue_points: int, show_link: bool = False) -> None:
     tf.print()
 
 
-def simulate(other_points: int, filter_: list = ['1 rum']) -> None:
+def simulate(other_points: int, size: list = ['1 rum'],
+             n: int = 1000) -> None:
     """ Runs simulation with other points and saves result in a database """
 
     # Make a set of all the different points that are in the queues
@@ -77,7 +78,7 @@ def simulate(other_points: int, filter_: list = ['1 rum']) -> None:
     accommodations = list(acc_database.get_accommodations_with_date(date))
 
     simulation_gen = simulation.run_simulation(other_points, accommodations,
-                                               filter_)
+                                               size, n)
     total = next(simulation_gen)
 
     # Store all results from simulation
