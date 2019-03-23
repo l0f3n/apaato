@@ -18,6 +18,8 @@ from typing import Generator
 # Import re to find number of applcaints and queue points
 import re
 
+import os
+
 # Import framework
 from apaato.accommodation import Accommodation
 
@@ -33,8 +35,8 @@ def fetch_all_accommodations():
     # Initialize headless driver
     options = webdriver.FirefoxOptions()
     options.add_argument('--headless')
-    driver = webdriver.Firefox(firefox_options=options)
-
+    driver = webdriver.Firefox(firefox_options=options,
+            log_path=os.path.expanduser('~/Documents/apaato/geckodriver.log'))
     # Go to page with all apartments
     start_page = "https://www.studentbostader.se/en/find-apartments/search-apartments?pagination=0&paginationantal=10000"
     driver.get(start_page)

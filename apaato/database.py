@@ -3,6 +3,8 @@
 # Import sqlite3 to store accommodations in a database
 import sqlite3
 
+import os
+
 # Import generator for annotations
 from typing import Generator
 
@@ -13,7 +15,9 @@ from apaato.accommodation import Accommodation
 class AccommodationDatabase:
 
     def __init__(self):
-        self.conn = sqlite3.connect('accommodations.db')
+        dbf = os.path.expanduser('~/Documents/apaato/accommodations_db.sqlite')
+        self.conn = sqlite3.connect(dbf)
+
         self.curs = self.conn.cursor()
         self.curs.execute(""" CREATE TABLE IF NOT EXISTS accommodations (
                           address text,
