@@ -79,7 +79,8 @@ class TestSimulation(unittest.TestCase):
         combination = [self.accommodation1, self.accommodation2,
                        self.accommodation3]
 
-        test_prob = simulation.do_simulations(accommodations, combination, 750)
+        test_prob = simulation.do_simulations(accommodations, combination, 750,
+                n=1000)
 
         correct_prob = {1: 0.338, 2: 0.354, 3: 308}
 
