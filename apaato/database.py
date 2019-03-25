@@ -15,8 +15,14 @@ from apaato.accommodation import Accommodation
 class AccommodationDatabase:
 
     def __init__(self):
-        dbf = os.path.expanduser('~/Documents/apaato/accommodations_db.sqlite')
-        self.conn = sqlite3.connect(dbf)
+        directory = os.path.expanduser('~/Documents/apaato')
+
+        try:
+            os.mkdir(directory)
+        except FileExistsError:
+            pass
+
+        self.conn = sqlite3.connect(directory + "/accommodations_db.sqlite")
 
         self.curs = self.conn.cursor()
         self.curs.execute(""" CREATE TABLE IF NOT EXISTS accommodations (
