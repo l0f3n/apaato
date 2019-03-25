@@ -1,6 +1,7 @@
 # main.py
 
 import os
+import sys
 import time
 from datetime import datetime
 
@@ -10,12 +11,10 @@ import apaato.scraper as scraper
 import apaato.simulation as simulation
 import apaato.text_formatter as text_formatter
 
-acc_database = database.AccommodationDatabase()
-
 def load_accommodations() -> None:
     """ Loads all accommodations from studentbostader.se into the database """
 
-    acc_database.wipe()
+    acc_database = database.AccommodationDatabase(new_database=True)
 
     accommodations_gen = scraper.fetch_all_accommodations()
     total = next(accommodations_gen)
@@ -38,6 +37,8 @@ def list_accommodations(queue_points: int = 0, show_link: bool = False) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
+    acc_database = database.AccommodationDatabase()
+
     # Finds the earliest latest application acceptance date
     earliest_date = min(datetime.strptime(accommodation.date, '%Y-%m-%d')
                         for accommodation
@@ -56,6 +57,8 @@ def simulate(other_points: int, size: list = ['1 rum'],
              n: int = 1000) -> None:
     """ Runs simulation with other points and saves result in a database """
 
+    acc_database = database.AccommodationDatabase()
+
     # Make a set of all the different points that are in the queues
     unique_queue_points = set()
     for accommodation in list(acc_database.get_all_accommodations()):
@@ -65,7 +68,7 @@ def simulate(other_points: int, size: list = ['1 rum'],
     if other_points in unique_queue_points:
         print("Unable to simulate with '" + str(other_points) + "' points. " +
               "Points must be unique.")
-        return
+        sys.exit(-1)
 
     # Finds the earliest latest application acceptance date
     earliest_date = min(datetime.strptime(accommodation.date, '%Y-%m-%d')

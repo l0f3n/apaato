@@ -4,6 +4,8 @@
 import sqlite3
 
 import os
+import sys
+from pathlib import Path
 
 # Import generator for annotations
 from typing import Generator
@@ -11,18 +13,24 @@ from typing import Generator
 # Import framework
 from apaato.accommodation import Accommodation
 
+dir_name = os.path.expanduser('~/Documents/apaato')
+file_name = "/accommodations_db.sqlite"
 
 class AccommodationDatabase:
 
-    def __init__(self):
-        directory = os.path.expanduser('~/Documents/apaato')
+    def __init__(self, new_database: bool = False):
 
-        try:
-            os.mkdir(directory)
-        except FileExistsError:
-            pass
+        if new_database:
+            try:
+                os.mkdir(dir_name)
+            except FileExistsError:
+                pass
+        else:
+            if not Path(dir_name + file_name).is_file():
+                print("No database found. Please run 'apaato load'.")
+                sys.exit()
 
-        self.conn = sqlite3.connect(directory + "/accommodations_db.sqlite")
+        self.conn = sqlite3.connect(dir_name + file_name)
 
         self.curs = self.conn.cursor()
         self.curs.execute(""" CREATE TABLE IF NOT EXISTS accommodations (
@@ -36,6 +44,8 @@ class AccommodationDatabase:
                           third integer,
                           fourth integer,
                           fifth integer) """)
+        if new_database:
+            self.wipe()
 
     def insert_accommodation(self, acc: Accommodation) -> None:
         """ Inserts an Accommodation object into database """
