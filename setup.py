@@ -9,6 +9,7 @@ setup(
     install_requires=[
         'selenium',
         'requests',
+        'lxml',
         'bs4',],
 
     entry_points={
