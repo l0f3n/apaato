@@ -5,7 +5,7 @@ This application allows you to see the probability of you getting an accommodati
 ![Example usage](https://i.imgur.com/dxcroLd.png)
 
 ## Installing
-Download geckodriver from [here](https://github.com/mozilla/geckodriver/releases) and save it to as `~/Documents/apaato/geckodriver`
+Download geckodriver from [here](https://github.com/mozilla/geckodriver/releases) and save it as `~/Documents/apaato/geckodriver`.
 
 Copy this repository and install using `pip3 install /path/to/apaato`.
 
