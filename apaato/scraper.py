@@ -36,7 +36,8 @@ def fetch_all_accommodations():
     options = webdriver.FirefoxOptions()
     options.add_argument('--headless')
     driver = webdriver.Firefox(firefox_options=options,
-            log_path=os.path.expanduser('~/Documents/apaato/geckodriver.log'))
+            log_path=os.path.expanduser('~/Documents/apaato/geckodriver.log'),
+            executable_path=os.path.expanduser('~/Documents/apaato/geckodriver'),)
     # Go to page with all apartments
     start_page = "https://www.studentbostader.se/en/find-apartments/search-apartments?pagination=0&paginationantal=10000"
     driver.get(start_page)
