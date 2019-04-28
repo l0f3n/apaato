@@ -21,12 +21,12 @@ def load_accommodations() -> None:
 
     start_time = time.time()
 
-    for current, accommodation in enumerate(accommodations_gen):
+    for current, accommodation in enumerate(accommodations_gen, start=1):
         acc_database.insert_accommodation(accommodation)
 
         os.system('cls' if os.name == 'nt' else 'clear') # Windows / Unix
         print('{current} / {total}'.format(
-            current=current+1,
+            current=current,
             total=total))
 
     print('Finished in {time:.3f} seconds'.format(
@@ -89,12 +89,12 @@ def simulate(other_points: int, size: list = ['1 rum'],
 
     start_time = time.time()
 
-    for current, result in enumerate(simulation_gen):
+    for current, result in enumerate(simulation_gen, start=1):
         combinations.append(result)
 
         os.system('cls' if os.name == 'nt' else 'clear') # Windows / Unix
         print('{current} / {total}'.format(
-            current=current+1,
+            current=current,
             total=total))
 
     print('Finished in {time:.3f} seconds'.format(
@@ -109,4 +109,3 @@ def list_probabilites(combinations):
 
     tf = text_formatter.CombintationListing(combinations)
     tf.print()
-
