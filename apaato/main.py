@@ -37,7 +37,6 @@ def load_accommodations() -> None:
     for current, accommodation in enumerate(accommodations_gen, start=1):
         acc_database.insert_accommodation(accommodation)
 
-        os.system('cls' if os.name == 'nt' else 'clear') # Windows / Unix
         print('{current} / {total}'.format(
             current=current,
             total=total))
@@ -105,7 +104,6 @@ def simulate(other_points: int, size: list = ['1 rum'],
     for current, result in enumerate(simulation_gen, start=1):
         combinations.append(result)
 
-        os.system('cls' if os.name == 'nt' else 'clear') # Windows / Unix
         print('{current} / {total}'.format(
             current=current,
             total=total))
