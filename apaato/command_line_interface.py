@@ -1,18 +1,5 @@
 # command_line_interface.py
 
-#               command_line_interface.py
-#                          |
-#                        main.py
-#                          |
-#     +------------+-------+---------+----------------+
-#     |            |                 |                |
-# scraper.py   database.py   text_formatter.py   simulation.py
-#     |            |                 |                |
-#     +------------+-------+---------+----------------+
-#                          |
-#                     accommodation.py
-
-
 import apaato.main as commands
 import argparse
 
@@ -64,7 +51,7 @@ def main():
 
     sim_parser.add_argument('points',
                             type=int,
-                            help='the amount of points to simulate with',)
+                            help='your queue points',)
 
     sim_parser.add_argument('-s', '--size',
                             type=str,

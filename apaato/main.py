@@ -1,5 +1,18 @@
 # main.py
 
+#               command_line_interface.py
+#                          |
+#                        main.py
+#                          |
+#     +------------+-------+---------+----------------+
+#     |            |                 |                |
+# scraper.py   database.py   text_formatter.py   simulation.py
+#     |            |                 |                |
+#     +------------+-------+---------+----------------+
+#                          |
+#                     accommodation.py
+
+
 import os
 import sys
 import time
@@ -14,12 +27,12 @@ import apaato.text_formatter as text_formatter
 def load_accommodations() -> None:
     """ Loads all accommodations from studentbostader.se into the database """
 
+    start_time = time.time()
+
     acc_database = database.AccommodationDatabase(new_database=True)
 
     accommodations_gen = scraper.fetch_all_accommodations()
     total = next(accommodations_gen)
-
-    start_time = time.time()
 
     for current, accommodation in enumerate(accommodations_gen, start=1):
         acc_database.insert_accommodation(accommodation)
