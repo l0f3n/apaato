@@ -1,3 +1,6 @@
 __pycache__
-geckodriver.log
 accommodations.db
+accommodations_db.sqlite
+apaato.egg-info
+geckodriver.log
+geckodriver
