@@ -10,8 +10,8 @@ from apaato.accommodation import Accommodation
 class AccommodationListing:
     """ Class that handles the printing of the accommodations """
 
-    def __init__(self, accommodations: list, queue_points: int,
-                 show_link: bool):
+    def __init__(self, accommodations: list, queue_points: int = None,
+                 show_link: bool = False):
 
         if not queue_points:
             self.accommodations = sorted(accommodations, key=lambda x:
@@ -191,5 +191,15 @@ class CombintationListing:
     def print(self):
         """ Prints all combinations and their probabilities """
 
+        print('These are the probabilites of getting an accommodation:')
+
         for index, combination in enumerate(self.combinations):
             self.print_combination(index, combination)
+
+
+def print_progress_bar(progress: float, max_length: int = 40):
+    """ Simple progress bar. Progress is how far along it should be [0, 1] and
+    max_length is the maximum length the progress bar will reach. """
+    l = int(progress*max_length)
+    print(f"\r[ {l*'#'+(max_length-l)*'-'} ] {progress:.2%} Completed", end='',
+        flush=True)

@@ -66,9 +66,10 @@ def run_simulation(other_points: int, accommodations: list,
     # time
     count = min(len(possible_accommodations), 5)
 
-    # Calculates the total number of combinations
+    yield possible_accommodations
+
     yield sum([nck(len(possible_accommodations), number)
-               for number in range(1, count+1)])
+           for number in range(1, count+1)])
 
     # Keeps track of all accommodations that have a 100% or 0% chance.
     # Any simulation with these accommodations in them is not necessary to run

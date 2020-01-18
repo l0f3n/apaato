@@ -27,6 +27,8 @@ import apaato.text_formatter as text_formatter
 def load_accommodations() -> None:
     """ Loads all accommodations from studentbostader.se into the database """
 
+    print('Loading studentbostader.se... ', end = '', flush=True)
+
     start_time = time.time()
 
     acc_database = database.AccommodationDatabase(new_database=True)
@@ -34,15 +36,16 @@ def load_accommodations() -> None:
     accommodations_gen = scraper.fetch_all_accommodations()
     total = next(accommodations_gen)
 
+    print(f'found {total} accommodations.')
+
+    print('Fetching data about each accommodation... ')
+
     for current, accommodation in enumerate(accommodations_gen, start=1):
         acc_database.insert_accommodation(accommodation)
 
-        print('{current} / {total}'.format(
-            current=current,
-            total=total))
+        text_formatter.print_progress_bar(current/total)
 
-    print('Finished in {time:.3f} seconds'.format(
-        time=time.time() - start_time))
+    print(f'\nFinished in {time.time() - start_time:.3f} seconds')
 
 
 def list_accommodations(queue_points: int = 0, show_link: bool = False) -> None:
@@ -78,7 +81,7 @@ def simulate(other_points: int, size: list = ['1 rum'],
 
     # Check that the queue_points are unique
     if other_points in unique_queue_points:
-        print("Unable to simulate with '" + str(other_points) + "' points. " +
+        print(f"Unable to simulate with {other_points} points. " +
               "Points must be unique.")
         sys.exit(-1)
 
@@ -94,7 +97,16 @@ def simulate(other_points: int, size: list = ['1 rum'],
 
     simulation_gen = simulation.run_simulation(other_points, accommodations,
                                                size, n)
-    total = next(simulation_gen)
+
+    desired_accommodations = next(simulation_gen)
+
+    accListing = text_formatter.AccommodationListing(desired_accommodations)
+
+    print(f'Running simulation with the {len(desired_accommodations)}' +
+        ' accommodations listed below:')
+    accListing.print()
+
+    total_combinations = next(simulation_gen)
 
     # Store all results from simulation
     combinations = []
@@ -104,12 +116,11 @@ def simulate(other_points: int, size: list = ['1 rum'],
     for current, result in enumerate(simulation_gen, start=1):
         combinations.append(result)
 
-        print('{current} / {total}'.format(
-            current=current,
-            total=total))
+        text_formatter.print_progress_bar(current/total_combinations)
 
-    print('Finished in {time:.3f} seconds'.format(
-        time=time.time() - start_time))
+    text_formatter.print_progress_bar(1)
+
+    print(f'\nFinished in {time.time() - start_time:.3} seconds')
 
     return combinations
 
