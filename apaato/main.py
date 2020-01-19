@@ -77,7 +77,7 @@ def list_accommodations(queue_points: int = 0, show_link: bool = False,
     tf.print()
 
 
-def simulate(other_points: int, size: list = ['1 rum'],
+def simulate(other_points: int, size: list = [],
              n: int = 1000) -> None:
     """ Runs simulation with other points and saves result in a database """
 

@@ -13,7 +13,7 @@ from apaato.accommodation import Accommodation
 
 
 def run_simulation(other_points: int, accommodations: list,
-                   size: list = '1 rum', n: int = 1000) -> dict:
+                   sizes: list = [], n: int = 1000) -> dict:
     """ Runs simulation for every combination of accommodations that is
     desired """
 
@@ -30,7 +30,8 @@ def run_simulation(other_points: int, accommodations: list,
 
         def inner_filter(a: Accommodation) -> bool:
 
-            return a.size in size
+            # Check if a.size is in sizes, if sizes empty, accept all
+            return True if sizes == [] else a.size in sizes
 
         return filter(inner_filter, accommodations)
 
