@@ -18,6 +18,8 @@ from typing import Generator
 # Import re to find number of applcaints and queue points
 import re
 
+from time import sleep
+
 import os
 
 # Import framework
@@ -38,14 +40,26 @@ def fetch_all_accommodations():
     driver = webdriver.Firefox(firefox_options=options,
             log_path=os.path.expanduser('~/Documents/apaato/geckodriver.log'),
             executable_path=os.path.expanduser('~/Documents/apaato/geckodriver'),)
+
     # Go to page with all apartments
     start_page = "https://www.studentbostader.se/en/find-apartments/search-apartments?pagination=0&paginationantal=10000"
-    driver.get(start_page)
 
-    # Find refids to all accommodations
-    accommodations = driver.find_elements_by_class_name('noLinkcolor')[1:]
-    accommodation_links = (a.get_attribute('href') for a in accommodations)
-    refids = [link[link.index('=')+1:] for link in accommodation_links]
+    page_load_successful = False
+    while not page_load_successful:
+        driver.get(start_page)
+
+        sleep(1)
+
+        # Find refids to all accommodations
+        accommodations = driver.find_elements_by_class_name('noLinkcolor')[1:]
+        accommodation_links = (a.get_attribute('href') for a in accommodations)
+
+        try:
+            refids = [link[link.index('=')+1:] for link in accommodation_links]
+        except ValueError:
+            print('\nFailed to load page. Trying again... ', end='', flush=True)
+        else:
+            page_load_successful = True
 
     # Yield total amount of accommodations
     yield len(refids)
