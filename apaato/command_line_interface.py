@@ -10,7 +10,8 @@ def load_wrapper(args):
 
 def accommodations_wrapper(args):
     commands.list_accommodations(queue_points=args.points,
-                                 show_link=args.link,)
+                                 show_link=args.link,
+                                 only_earliest_acceptance_date=args.only_earliest, )
 
 
 def simulation_wrapper(args):
@@ -41,6 +42,11 @@ def main():
 
     acc_parser.add_argument('-l', '--link',
                             help='if present, show link to accommodation',
+                            action='store_true',)
+
+    acc_parser.add_argument('--only-earliest',
+                            help='if preset, show only accommodations the' +
+                            'earliest latest application acceptance date',
                             action='store_true',)
 
     acc_parser.set_defaults(func=accommodations_wrapper, points=0)

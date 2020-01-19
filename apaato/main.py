@@ -48,20 +48,29 @@ def load_accommodations() -> None:
     print(f'\nFinished in {time.time() - start_time:.3f} seconds')
 
 
-def list_accommodations(queue_points: int = 0, show_link: bool = False) -> None:
+def list_accommodations(queue_points: int = 0, show_link: bool = False,
+                        only_earliest_acceptance_date: bool = False) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
     acc_database = database.AccommodationDatabase()
 
-    # Finds the earliest latest application acceptance date
-    earliest_date = min(datetime.strptime(accommodation.date, '%Y-%m-%d')
-                        for accommodation
-                        in acc_database.get_all_accommodations())
+    if only_earliest_acceptance_date:
+        # Finds the earliest latest application acceptance date
+        earliest_date = min(datetime.strptime(accommodation.date, '%Y-%m-%d')
+                            for accommodation
+                            in acc_database.get_all_accommodations())
 
-    # Only list the relevant accommodations
-    date = earliest_date.strftime('%Y-%m-%d')
-    accommodations = list(acc_database.get_accommodations_with_date(date))
+        # Only list the relevant accommodations
+        date = earliest_date.strftime('%Y-%m-%d')
+        accommodations = list(acc_database.get_accommodations_with_date(date))
+
+        print("Showing only accommodations with the latest\n" +
+        f"application acceptance date {date}:")
+    else:
+        print("Showing all accommodations currently available:")
+
+        accommodations = list(acc_database.get_all_accommodations())
 
     tf = text_formatter.AccommodationListing(accommodations, queue_points,
                                              show_link)
