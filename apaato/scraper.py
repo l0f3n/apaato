@@ -86,7 +86,7 @@ def fetch_accommodation(refid: str) -> dict:
     matches = queue_points_pattern.findall(interest_status_text)
 
     # The first match is the number of applicants
-    number_of_applicants = matches.pop(0)
+    number_of_applicants = matches.pop(0) if len(matches) > 0 else 0
     accommodation_properties['applicants'] = number_of_applicants
 
     # Remove whitespace and convert all matches to ints, right pad the list
