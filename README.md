@@ -6,7 +6,7 @@ This application allows you to see the probability of you getting an accommodati
 
 ## Installing
 
-Install Firefox and then run the follwing commands: 
+Install Firefox and then run the following commands: 
 ```
 # clone repository
 git clone https://github.com/l0f3n/apaato.git
