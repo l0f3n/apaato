@@ -201,5 +201,5 @@ def print_progress_bar(progress: float, max_length: int = 40):
     """ Simple progress bar. Progress is how far along it should be [0, 1] and
     max_length is the maximum length the progress bar will reach. """
     l = int(progress*max_length)
-    print(f"\r[ {l*'#'+(max_length-l)*'-'} ] {progress:.2%} Completed", end='',
+    print(f"\r[{l*'#'+(max_length-l)*'.'}] {progress:.2%} Completed", end='',
         flush=True)
