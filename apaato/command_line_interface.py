@@ -15,8 +15,9 @@ def accommodations_wrapper(args):
 
 
 def simulation_wrapper(args):
-    combinations = commands.simulate(args.points, size=args.sizes,
-                                     n=args.num)
+    combinations = commands.simulate(args.points,
+                                     size=args.sizes,
+                                     n=args.num,)
     commands.list_probabilites(combinations)
 
 
@@ -24,8 +25,8 @@ def main():
 
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(title='commands',
-                                       description='available commands',
-                                       help='which command to run',)
+                                       description='Available commands',
+                                       help='Which command to run',)
 
     # load
     load_parser = subparsers.add_parser("load")
@@ -37,15 +38,14 @@ def main():
 
     acc_parser.add_argument('-p', '--points',
                             type=int,
-                            help='provide your points to sort by your \
-                            position in queue',)
+                            help='If present, sort apartments by position in queue',)
 
     acc_parser.add_argument('-l', '--link',
-                            help='if present, show link to accommodation',
+                            help='(Default: False) Show link to accommodation',
                             action='store_true',)
 
     acc_parser.add_argument('--only-earliest',
-                            help='if preset, show only accommodations the' +
+                            help='(Default: False) Show only accommodations the ' +
                             'earliest latest application acceptance date',
                             action='store_true',)
 
@@ -57,17 +57,17 @@ def main():
 
     sim_parser.add_argument('points',
                             type=int,
-                            help='your queue points',)
+                            help='Queue points to simulate with',)
 
     sim_parser.add_argument('-s', '--sizes',
                             type=str,
                             nargs='+',
-                            help="what size of accommodation to apply for. \
-                            (eg. 'Korridorrum', '1 rum', etc.)",)
+                            help='(Default: all) What sizes of accommodations to apply for \
+                            [Korridorrum|1 rum|2 rum|VALLAVÅNING| ... ]',)
 
     sim_parser.add_argument('-n', '--num',
                             type=int,
-                            help="how many simulation to run per combination",)
+                            help='(Default: 1000) How many simulation to run per combination',)
 
 
     sim_parser.set_defaults(func=simulation_wrapper, sizes=[], num=1000)
