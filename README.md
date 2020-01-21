@@ -5,16 +5,15 @@ This application allows you to see the probability of you getting an accommodati
 ![Example usage](https://i.imgur.com/EEZbF8s.png)
 
 ## Installing
-
-Download this repository and install it using `pip3 install /path/to/apaato`.
-
-Then download geckodriver with these commands:
+Navigate to the folder where you want to install it and type (or just copy) the following commands:
 ```
-$ wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz -P ~/Documents/apaato
-$ tar -xzvf ~/Documents/apaato/geckodriver-v0.26.0-linux64.tar.gz -C ~/Documents/apaato
-$ rm ~/Documents/apaato/geckodriver-v0.26.0-linux64.tar.gz
+git clone https://github.com/l0f3n/apaato.git
+pip3 install ./apaato/
+cd ./apaato/
+wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
+tar -xzvf geckodriver-v0.26.0-linux64.tar.gz
+rm ./geckodriver-v0.26.0-linux64.tar.gz
 ```
-
 
 ## Using
 
