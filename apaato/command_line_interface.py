@@ -11,6 +11,8 @@ def load_wrapper(args):
 def accommodations_wrapper(args):
     commands.list_accommodations(queue_points=args.points,
                                  show_link=args.link,
+                                 show_size=args.size,
+                                 show_area=args.area,
                                  only_earliest_acceptance_date=args.only_earliest, )
 
 
@@ -43,6 +45,14 @@ def main():
 
     acc_parser.add_argument('-l', '--link',
                             help='(Default: False) Show link to accommodation',
+                            action='store_true',)
+
+    acc_parser.add_argument('-s', '--size',
+                            help='(Default: False) Show the size of the accommodation',
+                            action='store_true',)
+
+    acc_parser.add_argument('-a', '--area',
+                            help='(Default: False) Show the area that the accommodation is in',
                             action='store_true',)
 
     acc_parser.add_argument('--only-earliest',

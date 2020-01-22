@@ -10,8 +10,12 @@ from apaato.accommodation import Accommodation
 class AccommodationListing:
     """ Class that handles the printing of the accommodations """
 
-    def __init__(self, accommodations: list, queue_points: int = None,
-                 show_link: bool = False):
+    def __init__(self,
+                 accommodations: list,
+                 queue_points: int = None,
+                 show_link: bool = False,
+                 show_size: bool = False,
+                 show_area: bool = False, ):
 
         if not queue_points:
             self.accommodations = sorted(accommodations, key=lambda x:
@@ -24,8 +28,11 @@ class AccommodationListing:
         self.queue_points = queue_points
         self.address_length = 0
         self.size_length = 0
+        self.area_length = 0
 
         self.show_link = show_link
+        self.show_size = show_size
+        self.show_area = show_area
 
         self.calculate_padding()
 
@@ -44,6 +51,15 @@ class AccommodationListing:
             size_length = len(a.size)
             if size_length > self.size_length:
                 self.size_length = size_length
+
+            # Area
+            area_length = len(a.area)
+            if area_length > self.area_length:
+                self.area_length = area_length
+
+        self.address_length += 1
+        self.size_length += 1
+        self.area_length += 1
 
     def print_accommodation(self, index: int,
                             accommodation: Accommodation) -> None:
@@ -70,7 +86,11 @@ class AccommodationListing:
 
             f_size = "{accommodation.size:<{size_length}}".format(
                 accommodation=accommodation,
-                size_length=self.size_length)
+                size_length=self.size_length) if self.show_size else ""
+
+            f_area = "{accommodation.area:<{area_length}}".format(
+                accommodation=accommodation,
+                area_length=self.area_length) if self.show_area else ""
 
             base_link = ("https://www.studentbostader.se/en/find-apartments/"
                          "ledig-bostad?refid=")
@@ -78,7 +98,7 @@ class AccommodationListing:
                 accommodation=accommodation,
                 base_link=base_link) if self.show_link else ""
 
-            return ' '.join([f_address, f_size, f_link])
+            return ''.join([f_address, f_size, f_area, f_link])
 
         def all_fields() -> Generator[str, None, None]:
             yield formatted_index()
