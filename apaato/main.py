@@ -114,6 +114,10 @@ def simulate(other_points: int,
 
     desired_accommodations = next(simulation_gen)
 
+    if len(desired_accommodations) == 0:
+        print("No accommodation matched the specified critera.")
+        sys.exit(-1)
+
     accListing = text_formatter.AccommodationListing(desired_accommodations)
 
     print(f'Running simulation with the {len(desired_accommodations)}' +
