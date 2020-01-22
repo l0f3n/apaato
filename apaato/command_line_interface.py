@@ -16,7 +16,8 @@ def accommodations_wrapper(args):
 
 def simulation_wrapper(args):
     combinations = commands.simulate(args.points,
-                                     size=args.sizes,
+                                     sizes=args.sizes,
+                                     areas=args.areas,
                                      n=args.num,)
     commands.list_probabilites(combinations)
 
@@ -59,18 +60,24 @@ def main():
                             type=int,
                             help='Queue points to simulate with',)
 
-    sim_parser.add_argument('-s', '--sizes',
+    sim_parser.add_argument('--sizes',
                             type=str,
                             nargs='+',
                             help='(Default: all) What sizes of accommodations to apply for \
-                            [Korridorrum|1 rum|2 rum|VALLAVÅNING| ... ]',)
+                                  [Korridorrum|1 rum|2 rum|VALLAVÅNING| ... ]',)
 
-    sim_parser.add_argument('-n', '--num',
+    sim_parser.add_argument('--areas',
+                            type=str,
+                            nargs='+',
+                            help='(Default: all) What areas the accommodations needs to be in \
+                                  [Ryd|Flamman|Vallastaden|Irrblosset| ... ]',)
+
+    sim_parser.add_argument('--num',
                             type=int,
                             help='(Default: 1000) How many simulation to run per combination',)
 
 
-    sim_parser.set_defaults(func=simulation_wrapper, sizes=[], num=1000)
+    sim_parser.set_defaults(func=simulation_wrapper, sizes=[], areas=[], num=1000)
 
     clargs = parser.parse_args()
 

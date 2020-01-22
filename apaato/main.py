@@ -77,7 +77,9 @@ def list_accommodations(queue_points: int = 0, show_link: bool = False,
     tf.print()
 
 
-def simulate(other_points: int, size: list = [],
+def simulate(other_points: int,
+             sizes: list = [],
+             areas: list = [],
              n: int = 1000) -> None:
     """ Runs simulation with other points and saves result in a database """
 
@@ -104,8 +106,11 @@ def simulate(other_points: int, size: list = [],
     date = earliest_date.strftime('%Y-%m-%d')
     accommodations = list(acc_database.get_accommodations_with_date(date))
 
-    simulation_gen = simulation.run_simulation(other_points, accommodations,
-                                               size, n)
+    simulation_gen = simulation.run_simulation(other_points,
+                                               accommodations,
+                                               sizes,
+                                               areas,
+                                               n)
 
     desired_accommodations = next(simulation_gen)
 

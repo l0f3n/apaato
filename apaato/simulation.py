@@ -12,8 +12,11 @@ import apaato.database
 from apaato.accommodation import Accommodation
 
 
-def run_simulation(other_points: int, accommodations: list,
-                   sizes: list = [], n: int = 1000) -> dict:
+def run_simulation(other_points: int,
+                   accommodations: list,
+                   sizes: list = [],
+                   areas: list = [],
+                   n: int = 1000) -> dict:
     """ Runs simulation for every combination of accommodations that is
     desired """
 
@@ -30,8 +33,10 @@ def run_simulation(other_points: int, accommodations: list,
 
         def inner_filter(a: Accommodation) -> bool:
 
-            # Check if a.size is in sizes, if sizes empty, accept all
-            return True if sizes == [] else a.size in sizes
+            desired_size = True if sizes == [] else a.size in sizes
+            desired_area = True if areas == [] else a.area in areas
+
+            return desired_size and desired_area
 
         return filter(inner_filter, accommodations)
 
