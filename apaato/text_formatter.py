@@ -12,20 +12,12 @@ class AccommodationListing:
 
     def __init__(self,
                  accommodations: list,
-                 queue_points: int = None,
                  show_link: bool = False,
                  show_size: bool = False,
                  show_area: bool = False, ):
 
-        if not queue_points:
-            self.accommodations = sorted(accommodations, key=lambda x:
-                                         x.address[0])
-        else:
-            self.accommodations = sorted(accommodations, key=lambda x:
-                                         (x.position_in_queue(queue_points),
-                                         x.queue_points_list[-1]))
+        self.accommodations = sorted(accommodations, key=lambda x: x.address[0])
 
-        self.queue_points = queue_points
         self.address_length = 0
         self.size_length = 0
         self.area_length = 0
@@ -40,61 +32,31 @@ class AccommodationListing:
         """ Calculates the correct amount of padding for the accommodation
         address and size """
 
-        for a in self.accommodations:
-
-            # Address
-            address_length = len(a.address)
-            if address_length > self.address_length:
-                self.address_length = address_length
-
-            # Size
-            size_length = len(a.size)
-            if size_length > self.size_length:
-                self.size_length = size_length
-
-            # Area
-            area_length = len(a.area)
-            if area_length > self.area_length:
-                self.area_length = area_length
-
-        self.address_length += 1
-        self.size_length += 1
-        self.area_length += 1
+        self.address_length = max(len(a.address) for a in self.accommodations) + 1
+        self.size_length = max(len(a.size) for a in self.accommodations) + 1
+        self.area_length = max(len(a.area) for a in self.accommodations) + 1
 
     def print_accommodation(self,
                             index: int,
                             accommodation: Accommodation) -> None:
         """ Prints a single accommodation given its index """
 
-        def formatted_index() -> str:
-            f_index = f"{index+1:>{len(str(len(self.accommodations)))}}: "
+        # index
+        f_index = f"{index+1:>{len(str(len(self.accommodations)))}}: "
 
-            return f_index
+        # accommodation
+        f_address = f"{accommodation.address:<{self.address_length}}"
 
-        def formatted_position() -> str:
-            position = accommodation.position_in_queue(self.queue_points)
-            f_position = f"{position} " if self.queue_points else ""
+        f_size = f"{accommodation.size:<{self.size_length}}" if self.show_size else ""
 
-            return f_position
+        f_area = f"{accommodation.area:<{self.area_length}}" if self.show_area else ""
 
-        def formatted_accommodation() -> str:
-            f_address = f"{accommodation.address:<{self.address_length}}"
+        base_link = ("https://www.studentbostader.se/en/find-apartments/ledig-bostad?refid=")
+        f_link = f"{base_link + accommodation.refid}" if self.show_link else ""
 
-            f_size = f"{accommodation.size:<{self.size_length}}" if self.show_size else ""
+        f_accommodation = f_index + f_address + f_size + f_area + f_link
 
-            f_area = f"{accommodation.area:<{self.area_length}}" if self.show_area else ""
-
-            base_link = ("https://www.studentbostader.se/en/find-apartments/ledig-bostad?refid=")
-            f_link = f"{base_link + accommodation.refid}" if self.show_link else ""
-
-            return ''.join([f_address, f_size, f_area, f_link])
-
-        def all_fields() -> Generator[str, None, None]:
-            yield formatted_index()
-            yield formatted_position()
-            yield formatted_accommodation()
-
-        print(''.join(list(all_fields())))
+        print(f_accommodation)
 
     def print(self):
         """ Prints all the accommodations """

@@ -48,8 +48,7 @@ def load_accommodations() -> None:
     print(f'\nFinished in {time.time() - start_time:.3f} seconds')
 
 
-def list_accommodations(queue_points: int = 0,
-                        show_link: bool = False,
+def list_accommodations(show_link: bool = False,
                         show_size: bool = False,
                         show_area: bool = False,
                         only_earliest_acceptance_date: bool = False) -> None:
@@ -76,7 +75,6 @@ def list_accommodations(queue_points: int = 0,
         accommodations = list(acc_database.get_all_accommodations())
 
     tf = text_formatter.AccommodationListing(accommodations,
-                                             queue_points,
                                              show_link,
                                              show_size,
                                              show_area,)

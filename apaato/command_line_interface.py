@@ -9,8 +9,7 @@ def load_wrapper(args):
 
 
 def accommodations_wrapper(args):
-    commands.list_accommodations(queue_points=args.points,
-                                 show_link=args.link,
+    commands.list_accommodations(show_link=args.link,
                                  show_size=args.size,
                                  show_area=args.area,
                                  only_earliest_acceptance_date=args.only_earliest, )
@@ -39,14 +38,6 @@ def main():
     # accommodations
     acc_parser = subparsers.add_parser("accommodations")
 
-    acc_parser.add_argument('-p', '--points',
-                            type=int,
-                            help='If present, sort apartments by position in queue',)
-
-    acc_parser.add_argument('-l', '--link',
-                            help='(Default: False) Show link to accommodation',
-                            action='store_true',)
-
     acc_parser.add_argument('-s', '--size',
                             help='(Default: False) Show the size of the accommodation',
                             action='store_true',)
@@ -55,12 +46,16 @@ def main():
                             help='(Default: False) Show the area that the accommodation is in',
                             action='store_true',)
 
+    acc_parser.add_argument('-l', '--link',
+                            help='(Default: False) Show link to accommodation',
+                            action='store_true',)
+
     acc_parser.add_argument('--only-earliest',
                             help='(Default: False) Show only accommodations the ' +
                             'earliest latest application acceptance date',
                             action='store_true',)
 
-    acc_parser.set_defaults(func=accommodations_wrapper, points=0)
+    acc_parser.set_defaults(func=accommodations_wrapper)
 
 
     # simulation
