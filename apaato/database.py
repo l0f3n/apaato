@@ -37,6 +37,7 @@ class AccommodationDatabase:
                           address text,
                           refid text,
                           size text,
+                          area text,
                           date text,
                           applicants integer,
                           first integer,
@@ -59,6 +60,7 @@ class AccommodationDatabase:
             self.curs.execute(""" INSERT INTO accommodations VALUES (:address,
                                                              :refid,
                                                              :size,
+                                                             :area,
                                                              :date,
                                                              :applicants,
                                                              :first,
@@ -78,7 +80,7 @@ class AccommodationDatabase:
         """ Takes tuple (from database) and zips it with the kwargs names of the
         Accommodation class """
 
-        property_names = ['address', 'refid', 'size', 'date', 'applicants']
+        property_names = ['address', 'refid', 'size', 'area', 'date', 'applicants']
 
         return {**dict(zip(property_names, accommodation_properties[:-5])),
                 'queue_points_list': list(accommodation_properties[-5:])}
