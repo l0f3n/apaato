@@ -84,8 +84,7 @@ def list_accommodations(show_link: bool = False,
 
 def simulate(other_points: int,
              sizes: list = [],
-             areas: list = [],
-             n: int = 1000) -> None:
+             areas: list = [], ) -> None:
     """ Runs simulation with other points and saves result in a database """
 
     acc_database = database.AccommodationDatabase()
@@ -114,8 +113,7 @@ def simulate(other_points: int,
     simulation_gen = simulation.run_simulation(other_points,
                                                accommodations,
                                                sizes,
-                                               areas,
-                                               n)
+                                               areas, )
 
     desired_accommodations = next(simulation_gen)
 

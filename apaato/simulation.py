@@ -12,11 +12,13 @@ import apaato.database
 from apaato.accommodation import Accommodation
 
 
+SIMULATIONS_PER_COMBINATION = 1000
+
+
 def run_simulation(other_points: int,
                    accommodations: list,
                    sizes: list = [],
-                   areas: list = [],
-                   n: int = 1000) -> dict:
+                   areas: list = [], ) -> dict:
     """ Runs simulation for every combination of accommodations that is
     desired """
 
@@ -65,8 +67,7 @@ def run_simulation(other_points: int,
         return True
 
     # Find all desired accommodations
-    possible_accommodations = list(filter_accommodations(accommodations,
-                                                         other_points))
+    possible_accommodations = list(filter_accommodations(accommodations, other_points))
 
     # Calculate the amount of accommodations that are to be applied for at a
     # time
@@ -107,7 +108,7 @@ def run_simulation(other_points: int,
 
             # Run many simulations with current combination
             res = list(do_simulations(accommodations_copy, current_combination,
-                                      other_points, n).items())
+                                      other_points).items())
 
             chance = total_chance(res)
             if chance == 0 or math.isclose(chance, 1):
@@ -116,8 +117,9 @@ def run_simulation(other_points: int,
             yield res
 
 
-def do_simulations(accommodations: list, combination: list,
-                   other_points: int, n: int) -> dict:
+def do_simulations(accommodations: list,
+                   combination: list,
+                   other_points: int, ) -> dict:
     """ Runs simulation of accommodations n number of times and returns a
     dictionary with {address, [(points, chance), ...]} that gives the chance
     for person with points to get the accommodation at address """
@@ -125,7 +127,7 @@ def do_simulations(accommodations: list, combination: list,
     ret = {accommodation.address: 0 for accommodation in combination}
 
     # Run the simulation n times
-    for _ in range(n):
+    for _ in range(SIMULATIONS_PER_COMBINATION):
         result = simulate(accommodations)
 
         # For every person that got an accommodation
@@ -133,7 +135,7 @@ def do_simulations(accommodations: list, combination: list,
 
             # Only save my chances
             if points == other_points:
-                ret[address] += 1/n
+                ret[address] += 1/SIMULATIONS_PER_COMBINATION
                 break
 
     return ret
