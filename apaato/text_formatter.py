@@ -61,42 +61,31 @@ class AccommodationListing:
         self.size_length += 1
         self.area_length += 1
 
-    def print_accommodation(self, index: int,
+    def print_accommodation(self,
+                            index: int,
                             accommodation: Accommodation) -> None:
         """ Prints a single accommodation given its index """
 
         def formatted_index() -> str:
-            f_index = "{index:>{length}}".format(
-                index=str(index+1) + ':',
-                length=len(str(len(self.accommodations)))+1)
+            f_index = f"{index+1:>{len(str(len(self.accommodations)))}}: "
 
             return f_index
 
         def formatted_position() -> str:
-            f_position = "{position}".format(
-                position=accommodation.position_in_queue(self.queue_points)) \
-            if self.queue_points else ""
+            position = accommodation.position_in_queue(self.queue_points)
+            f_position = f"{position} " if self.queue_points else ""
 
             return f_position
 
         def formatted_accommodation() -> str:
-            f_address = "{accommodation.address:<{address_length}}".format(
-                accommodation=accommodation,
-                address_length=self.address_length)
+            f_address = f"{accommodation.address:<{self.address_length}}"
 
-            f_size = "{accommodation.size:<{size_length}}".format(
-                accommodation=accommodation,
-                size_length=self.size_length) if self.show_size else ""
+            f_size = f"{accommodation.size:<{self.size_length}}" if self.show_size else ""
 
-            f_area = "{accommodation.area:<{area_length}}".format(
-                accommodation=accommodation,
-                area_length=self.area_length) if self.show_area else ""
+            f_area = f"{accommodation.area:<{self.area_length}}" if self.show_area else ""
 
-            base_link = ("https://www.studentbostader.se/en/find-apartments/"
-                         "ledig-bostad?refid=")
-            f_link = "{base_link}{accommodation.refid}".format(
-                accommodation=accommodation,
-                base_link=base_link) if self.show_link else ""
+            base_link = ("https://www.studentbostader.se/en/find-apartments/ledig-bostad?refid=")
+            f_link = f"{base_link + accommodation.refid}" if self.show_link else ""
 
             return ''.join([f_address, f_size, f_area, f_link])
 
@@ -105,7 +94,7 @@ class AccommodationListing:
             yield formatted_position()
             yield formatted_accommodation()
 
-        print(' '.join(list(all_fields())))
+        print(''.join(list(all_fields())))
 
     def print(self):
         """ Prints all the accommodations """
