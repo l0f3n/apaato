@@ -144,7 +144,7 @@ def fetch_accommodation(refid: str) -> dict:
     accommodation_properties['size'] = size
 
     # Find area
-    area = soup.find('dd', class_='ObjektOmrade').text
+    area = soup.find('dd', class_='ObjektOmrade').text.strip()
     accommodation_properties['area'] = area
 
     return Accommodation(**accommodation_properties)
