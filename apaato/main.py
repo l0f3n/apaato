@@ -57,29 +57,15 @@ def list_accommodations(show_link: bool = False,
 
     acc_database = database.AccommodationDatabase()
 
-    if only_earliest_acceptance_date:
-        # Finds the earliest latest application acceptance date
-        earliest_date = min(datetime.strptime(accommodation.date, '%Y-%m-%d')
-                            for accommodation
-                            in acc_database.get_all_accommodations())
+    dates = sorted(set(accommodation.date for accommodation in acc_database.get_all_accommodations()))
 
-        # Only list the relevant accommodations
-        date = earliest_date.strftime('%Y-%m-%d')
-        accommodations = list(acc_database.get_accommodations_with_date(date))
-
-        print("Showing only accommodations with the latest\n" +
-        f"application acceptance date {date}:")
-    else:
-        print("Showing all accommodations currently available:")
-
-        accommodations = list(acc_database.get_all_accommodations())
-
-    tf = text_formatter.AccommodationListing(accommodations,
-                                             show_link,
-                                             show_size,
-                                             show_area,)
-
-    tf.print()
+    for date in dates:
+        print(f"Date: {date}")
+        tf = text_formatter.AccommodationListing(acc_database.get_accommodations_with_date(date),
+                                                 show_link,
+                                                 show_size,
+                                                 show_area,)
+        tf.print()
 
 
 def simulate(other_points: int,
