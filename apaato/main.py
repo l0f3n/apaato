@@ -50,8 +50,7 @@ def load_accommodations() -> None:
 
 def list_accommodations(show_link: bool = False,
                         show_size: bool = False,
-                        show_area: bool = False,
-                        only_earliest_acceptance_date: bool = False) -> None:
+                        show_area: bool = False,) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
