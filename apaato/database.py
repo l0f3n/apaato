@@ -94,7 +94,7 @@ class AccommodationDatabase:
             yield from map(self.to_accommodation, self.curs.fetchall())
 
     def get_accommodations_with_date(self, date):
-        search = "SELECT * FROM accommodations WHERE date LIKE '" + date + "'"
+        search = f"SELECT * FROM accommodations WHERE date LIKE '{date}'"
         yield from self.query(search)
 
     def get_all_accommodations(self):
