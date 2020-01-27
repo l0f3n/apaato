@@ -21,7 +21,7 @@ The three main commands are listed below.
 
 `apaato load`: loads all accommodations into a database.
 
-`apaato accommodations`: lists all accommodations.
+`apaato list`: lists all accommodations.
 
 `apaato simulate`: lists the probabilities of getting the accommodation.
 
