@@ -23,6 +23,6 @@ The three main commands are listed below.
 
 `apaato list`: lists all accommodations.
 
-`apaato simulate`: lists the probabilities of getting the accommodation.
+`apaato prob`: lists the probabilities of getting the accommodation.
 
 For more options on each of these commands, use the `-h` flag.

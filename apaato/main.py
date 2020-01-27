@@ -102,7 +102,7 @@ def simulate(other_points: int,
         print("No accommodation matched the specified critera.")
         sys.exit(-1)
 
-    print(f'Running simulation with {len(desired_accommodations)} accommodations...')
+    print(f'Simulating with {len(desired_accommodations)} accommodations...')
 
     total_combinations = next(simulation_gen)
 

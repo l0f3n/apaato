@@ -159,7 +159,7 @@ class CombintationListing:
     def print(self):
         """ Prints all combinations and their probabilities """
 
-        print('These are the probabilites of getting an accommodation:')
+        print('Estimated probabilities of getting an accommodation:')
 
         for index, combination in enumerate(self.combinations):
             self.print_combination(index, combination)

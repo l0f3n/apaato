@@ -50,26 +50,27 @@ def main():
 
     list_parser.set_defaults(func=list_wrapper)
 
-    # simulation
-    sim_parser = subparsers.add_parser("simulate")
 
-    sim_parser.add_argument('points',
+    # prob
+    prob_parser = subparsers.add_parser("prob")
+
+    prob_parser.add_argument('points',
                             type=int,
                             help='Queue points to simulate with',)
 
-    sim_parser.add_argument('--types',
+    prob_parser.add_argument('--types',
                             type=str,
                             nargs='+',
                             help='(Default: all) Only apply for accommodations of type \
                                   [Korridorrum|1 rum|2 rum|VALLAVÅNING| ... ]',)
 
-    sim_parser.add_argument('--locations',
+    prob_parser.add_argument('--locations',
                             type=str,
                             nargs='+',
                             help='(Default: all) Only apply for accommodation at location \
                                   [Ryd|Flamman|Vallastaden|Irrblosset| ... ]',)
 
-    sim_parser.set_defaults(func=simulation_wrapper, types=[], locations=[])
+    prob_parser.set_defaults(func=simulation_wrapper, types=[], locations=[])
 
     clargs = parser.parse_args()
 
