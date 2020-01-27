@@ -50,7 +50,6 @@ def main():
 
     list_parser.set_defaults(func=list_wrapper)
 
-
     # simulation
     sim_parser = subparsers.add_parser("simulate")
 
