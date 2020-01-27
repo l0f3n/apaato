@@ -8,10 +8,10 @@ def load_wrapper(args):
     commands.load_accommodations()
 
 
-def accommodations_wrapper(args):
+def list_wrapper(args):
     commands.list_accommodations(show_link=args.link,
-                                 show_type=args.size,
-                                 show_location=args.area,)
+                                 show_type=args.type,
+                                 show_location=args.location,)
 
 
 def simulation_wrapper(args):
@@ -33,22 +33,22 @@ def main():
     load_parser.set_defaults(func=load_wrapper)
 
 
-    # accommodations
-    acc_parser = subparsers.add_parser("accommodations")
+    # list
+    list_parser = subparsers.add_parser("list")
 
-    acc_parser.add_argument('--type',
+    list_parser.add_argument('--type',
                             help='(Default: False) Show the type of the accommodation',
                             action='store_true',)
 
-    acc_parser.add_argument('--location',
+    list_parser.add_argument('--location',
                             help='(Default: False) Show the location that the accommodation is in',
                             action='store_true',)
 
-    acc_parser.add_argument('-l', '--link',
+    list_parser.add_argument('-l', '--link',
                             help='(Default: False) Show link to accommodation',
                             action='store_true',)
 
-    acc_parser.set_defaults(func=accommodations_wrapper)
+    list_parser.set_defaults(func=list_wrapper)
 
 
     # simulation
