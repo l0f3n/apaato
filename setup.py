@@ -7,10 +7,8 @@ setup(
     packages=['apaato',],
 
     install_requires=[
-        'selenium',
         'requests',
-        'lxml',
-        'bs4',],
+        ],
 
     entry_points={
         'console_scripts': [

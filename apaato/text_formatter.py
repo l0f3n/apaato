@@ -13,18 +13,18 @@ class AccommodationListing:
     def __init__(self,
                  accommodations: list,
                  show_link: bool = False,
-                 show_size: bool = False,
-                 show_area: bool = False, ):
+                 show_type: bool = False,
+                 show_location: bool = False, ):
+
+        self.show_link     = show_link
+        self.show_type     = show_type
+        self.show_location = show_location
 
         self.accommodations = sorted(accommodations, key=lambda x: x.address[0])
 
-        self.address_length = 0
-        self.size_length = 0
-        self.area_length = 0
-
-        self.show_link = show_link
-        self.show_size = show_size
-        self.show_area = show_area
+        self.address_length  = 0
+        self.type_length     = 0
+        self.location_length = 0
 
         self.calculate_padding()
 
@@ -32,9 +32,9 @@ class AccommodationListing:
         """ Calculates the correct amount of padding for the accommodation
         address and size """
 
-        self.address_length = max(len(a.address) for a in self.accommodations) + 1
-        self.size_length = max(len(a.size) for a in self.accommodations) + 1
-        self.area_length = max(len(a.area) for a in self.accommodations) + 1
+        self.address_length  = max(len(a.address)  for a in self.accommodations) + 1
+        self.type_length     = max(len(a.type)     for a in self.accommodations) + 1
+        self.location_length = max(len(a.location) for a in self.accommodations) + 1
 
     def print_accommodation(self,
                             index: int,
@@ -47,12 +47,9 @@ class AccommodationListing:
         # accommodation
         f_address = f"{accommodation.address:<{self.address_length}}"
 
-        f_size = f"{accommodation.size:<{self.size_length}}" if self.show_size else ""
-
-        f_area = f"{accommodation.area:<{self.area_length}}" if self.show_area else ""
-
-        base_link = ("https://www.studentbostader.se/en/find-apartments/ledig-bostad?refid=")
-        f_link = f"{base_link + accommodation.refid}" if self.show_link else ""
+        f_size = f"{accommodation.type:<{self.type_length}}"         if self.show_type     else ""
+        f_area = f"{accommodation.location:<{self.location_length}}" if self.show_location else ""
+        f_link = f"{accommodation.url}"                              if self.show_link     else ""
 
         f_accommodation = f_index + f_address + f_size + f_area + f_link
 

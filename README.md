@@ -6,19 +6,9 @@ This application allows you to see the probability of you getting an accommodati
 
 ## Installing
 
-Install Firefox and then run the following commands: 
 ```
 # clone repository
 git clone https://github.com/l0f3n/apaato.git
-
-# download geckodriver v0.26.0
-wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz -P ~/Documents/apaato
-
-# extract it
-tar -xzvf ~/Documents/apaato/geckodriver-v0.26.0-linux64.tar.gz -C ~/Documents/apaato
-
-# remove the tar file
-rm ~/Documents/apaato/geckodriver-v0.26.0-linux64.tar.gz
 
 # install package
 pip3 install ./apaato/

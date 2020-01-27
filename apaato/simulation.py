@@ -1,11 +1,11 @@
 # simulation.py
 
-import random
 import copy
-import itertools
-import operator as op
 import functools
+import itertools
 import math
+import operator as op
+import random
 
 # Import framework
 import apaato.database
@@ -17,8 +17,8 @@ SIMULATIONS_PER_COMBINATION = 1000
 
 def run_simulation(other_points: int,
                    accommodations: list,
-                   sizes: list = [],
-                   areas: list = [], ) -> dict:
+                   types: list = [],
+                   locations: list = [], ) -> dict:
     """ Runs simulation for every combination of accommodations that is
     desired """
 
@@ -35,10 +35,10 @@ def run_simulation(other_points: int,
 
         def inner_filter(a: Accommodation) -> bool:
 
-            desired_size = True if sizes == [] else a.size in sizes
-            desired_area = True if areas == [] else a.area in areas
+            desired_type = True if types == [] else a.type in types
+            desired_location = True if locations == [] else a.location in locations
 
-            return desired_size and desired_area
+            return desired_type and desired_location
 
         return filter(inner_filter, accommodations)
 
@@ -163,7 +163,7 @@ def simulate(accommodations: list) -> list:
         for accommodation_index, accommodation in enumerate(accommodations):
 
             # Get the points of the person that is at position in accommodation
-            points = accommodation.queue_points_list[position]
+            points = accommodation.queue[position]
 
             # If that person did not already get an offer and the accommodation
             # is available

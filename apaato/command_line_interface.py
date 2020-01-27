@@ -10,14 +10,14 @@ def load_wrapper(args):
 
 def accommodations_wrapper(args):
     commands.list_accommodations(show_link=args.link,
-                                 show_size=args.size,
-                                 show_area=args.area,)
+                                 show_type=args.size,
+                                 show_location=args.area,)
 
 
 def simulation_wrapper(args):
     combinations = commands.simulate(args.points,
-                                     sizes=args.sizes,
-                                     areas=args.areas, )
+                                     types=args.types,
+                                     locations=args.locations, )
     commands.list_probabilites(combinations)
 
 
@@ -36,12 +36,12 @@ def main():
     # accommodations
     acc_parser = subparsers.add_parser("accommodations")
 
-    acc_parser.add_argument('-s', '--size',
-                            help='(Default: False) Show the size of the accommodation',
+    acc_parser.add_argument('--type',
+                            help='(Default: False) Show the type of the accommodation',
                             action='store_true',)
 
-    acc_parser.add_argument('-a', '--area',
-                            help='(Default: False) Show the area that the accommodation is in',
+    acc_parser.add_argument('--location',
+                            help='(Default: False) Show the location that the accommodation is in',
                             action='store_true',)
 
     acc_parser.add_argument('-l', '--link',
@@ -58,19 +58,19 @@ def main():
                             type=int,
                             help='Queue points to simulate with',)
 
-    sim_parser.add_argument('--sizes',
+    sim_parser.add_argument('--types',
                             type=str,
                             nargs='+',
-                            help='(Default: all) What sizes of accommodations to apply for \
+                            help='(Default: all) Only apply for accommodations of type \
                                   [Korridorrum|1 rum|2 rum|VALLAVÅNING| ... ]',)
 
-    sim_parser.add_argument('--areas',
+    sim_parser.add_argument('--locations',
                             type=str,
                             nargs='+',
-                            help='(Default: all) What areas the accommodations needs to be in \
+                            help='(Default: all) Only apply for accommodation at location \
                                   [Ryd|Flamman|Vallastaden|Irrblosset| ... ]',)
 
-    sim_parser.set_defaults(func=simulation_wrapper, sizes=[], areas=[])
+    sim_parser.set_defaults(func=simulation_wrapper, types=[], locations=[])
 
     clargs = parser.parse_args()
 

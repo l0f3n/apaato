@@ -12,8 +12,8 @@ class Accommodation:
         queue to accommodation. Returns 6 if the position is larger than or
         equal to 6 because only the top 5 queue points are visible """
 
-        for i, queue_points in enumerate(self.queue_points_list):
-            if other_points > queue_points:
+        for i, points in enumerate(self.queue):
+            if other_points > points:
                 position = i+1
                 break
         else:
@@ -24,7 +24,6 @@ class Accommodation:
     def insert_into_queue(self, other_points: int) -> None:
         """ Enter other_points into queue of accommodation """
 
-        for i, points in enumerate(self.queue_points_list):
+        for i, points in enumerate(self.queue):
             if other_points > points:
-                other_points, self.queue_points_list[i] = \
-                    self.queue_points_list[i], other_points
+                other_points, self.queue[i] = self.queue[i], other_points
