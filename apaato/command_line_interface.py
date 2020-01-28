@@ -15,7 +15,7 @@ def list_wrapper(args):
                                  show_location=args.location,)
 
 
-def simulation_wrapper(args):
+def prob_wrapper(args):
     args_dict = vars(args)
     del args_dict['func']
     combinations = commands.simulate(args_dict.pop('points'), **args_dict)
@@ -74,7 +74,7 @@ def main():
                                   [Ja|Nej]',)
 
 
-    prob_parser.set_defaults(func=simulation_wrapper, type=[], location=[], hiss=[])
+    prob_parser.set_defaults(func=prob_wrapper, type=[], location=[], hiss=[])
 
     clargs = parser.parse_args()
 
