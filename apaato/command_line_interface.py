@@ -42,16 +42,16 @@ def main():
                             help='(Default: False) Display location: [Ryd|Irrblosset|Lambohov|...]',
                             action='store_true',)
 
-    list_parser.add_argument('--url',
-                            help='(Default: False) Display url',
-                            action='store_true',)
-
     list_parser.add_argument('--rent',
                             help='(Default: False) Display rent',
                             action='store_true',)
 
     list_parser.add_argument('--elevator',
                             help='(Default: False) Display elevator status [Ja|Nej] (Yes|No)',
+                            action='store_true',)
+
+    list_parser.add_argument('--url',
+                            help='(Default: False) Display url',
                             action='store_true',)
 
     list_parser.set_defaults(func=list_wrapper)
