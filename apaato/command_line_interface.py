@@ -35,23 +35,23 @@ def main():
     list_parser = subparsers.add_parser("list")
 
     list_parser.add_argument('--type',
-                            help='(Default: False) Show the type of the accommodation',
+                            help='(Default: False) Display type: [Korridorrum|1 rum|2 rum|VALLAVÅNING|...]',
                             action='store_true',)
 
     list_parser.add_argument('--location',
-                            help='(Default: False) Show the location that the accommodation is in',
+                            help='(Default: False) Display location: [Ryd|Irrblosset|Lambohov|...]',
                             action='store_true',)
 
     list_parser.add_argument('--url',
-                            help='(Default: False) Show link to accommodation',
+                            help='(Default: False) Display url',
                             action='store_true',)
 
     list_parser.add_argument('--rent',
-                            help='(Default: False) Show the accommodations rent',
+                            help='(Default: False) Display rent',
                             action='store_true',)
 
     list_parser.add_argument('--elevator',
-                            help='(Default: False) Show if the accommodation has an elevator',
+                            help='(Default: False) Display elevator status [Ja|Nej] (Yes|No)',
                             action='store_true',)
 
     list_parser.set_defaults(func=list_wrapper)
@@ -66,20 +66,17 @@ def main():
     prob_parser.add_argument('--type',
                             type=str,
                             nargs='+',
-                            help='(Default: all) Only apply for accommodations of type \
-                                  [Korridorrum|1 rum|2 rum|VALLAVÅNING| ... ]',)
+                            help='(Default: all) Only apply for type=[Korridorrum|1 rum|2 rum|VALLAVÅNING|...]',)
 
     prob_parser.add_argument('--location',
                             type=str,
                             nargs='+',
-                            help='(Default: all) Only apply for accommodation at location \
-                                  [Ryd|Flamman|Vallastaden|Irrblosset| ... ]',)
+                            help='(Default: all) Only apply for location=[Ryd|Irrblosset|Lambohov|...]',)
 
     prob_parser.add_argument('--elevator',
                             type=str,
                             nargs='+',
-                            help='(Default: all) Only apply for accommodation with elevator (Ja) or without (Nej) \
-                                  [Ja|Nej]',)
+                            help='(Default: all) Only apply for elevator=[Ja|Nej] (Yes|No)', )
 
 
     prob_parser.set_defaults(func=prob_wrapper, type=[], location=[], hiss=[])
