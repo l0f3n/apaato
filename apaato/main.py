@@ -89,7 +89,7 @@ def simulate(other_points: int,
 
     # Only simulate with the apartments that have the earliest latest
     # application acceptance date
-    accommodations = list(acc_database.get_accommodations_with_deadline(earliest_deadline))
+    accommodations = list(acc_database.get_filtered_accommodations(deadline=earliest_deadline))
 
     simulation_gen = simulator.run_simulation(other_points,
                                                accommodations,
