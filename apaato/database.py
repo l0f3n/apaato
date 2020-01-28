@@ -95,15 +95,11 @@ class AccommodationDatabase:
         search = "SELECT * FROM accommodations WHERE "
         for key, value in kwargs.items():
             if isinstance(value, list):
-                if len(value) > 0:
-                    search += "("
-
+                search += "("
                 for val in value:
                     search += f"{key} LIKE '{val}' OR "
-
-                if len(value) > 0:
-                    search = search[:-4] + ") AND "
-            else:
+                search = search[:-4] + ") AND "
+            elif value is not None:
                 search += f"{key} LIKE '{value}' AND "
 
         if len(kwargs) > 0:

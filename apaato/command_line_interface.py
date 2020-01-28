@@ -79,7 +79,7 @@ def main():
                             help='(Default: all) Only apply for elevator=[Ja|Nej] (Yes|No)', )
 
 
-    prob_parser.set_defaults(func=prob_wrapper, type=[], location=[], hiss=[])
+    prob_parser.set_defaults(func=prob_wrapper)
 
     clargs = parser.parse_args()
 
