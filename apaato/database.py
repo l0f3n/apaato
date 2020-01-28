@@ -89,8 +89,20 @@ class AccommodationDatabase:
             self.curs.execute(query_text)
             yield from map(self.to_accommodation, self.curs.fetchall())
 
-    def get_accommodations_with_deadline(self, date):
-        search = f"SELECT * FROM accommodations WHERE deadline LIKE '{date}'"
+    def get_filtered_accommodations(self, **kwargs):
+        search = "SELECT * FROM accommodations WHERE "
+        for key, value in kwargs.items():
+            if isinstance(value, list):
+                for val in value:
+                    search += f"{key} LIKE '{val}' AND "
+            else:
+                search += f"{key} LIKE '{value}' AND "
+
+        if len(kwargs) > 0:
+            search = search[:-5]
+        else:
+            search = search[:-7]
+
         yield from self.query(search)
 
     def get_all_accommodations(self):

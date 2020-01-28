@@ -60,7 +60,7 @@ def list_accommodations(show_link: bool = False,
 
     for deadline in deadlines:
         print(f"Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}")
-        tf = text_formatter.AccommodationListing(acc_database.get_accommodations_with_deadline(deadline),
+        tf = text_formatter.AccommodationListing(acc_database.get_filtered_accommodations(deadline=deadline),
                                                  show_link,
                                                  show_type,
                                                  show_location,)
