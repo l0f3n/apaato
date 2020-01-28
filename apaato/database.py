@@ -94,7 +94,10 @@ class AccommodationDatabase:
         for key, value in kwargs.items():
             if isinstance(value, list):
                 for val in value:
-                    search += f"{key} LIKE '{val}' AND "
+                    search += f"{key} LIKE '{val}' OR "
+
+                if len(value) > 0:
+                    search = search[:-3] + "AND "
             else:
                 search += f"{key} LIKE '{value}' AND "
 
