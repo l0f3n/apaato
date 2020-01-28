@@ -71,7 +71,7 @@ def fetch_accommodation(accommodation_data: dict) -> dict:
         deadline = deadline_pattern.search(deadline_text).group()
     except AttributeError:
         # If date wasn't found, it means that it was an Accommodation Direct
-        deadline = "0000-00-00"
+        deadline = "9999-99-99"
     accommodation_properties["deadline"] = deadline
 
     return Accommodation(**accommodation_properties)
