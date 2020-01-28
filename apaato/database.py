@@ -36,6 +36,7 @@ class AccommodationDatabase:
                           location text,
                           deadline text,
                           rent integer,
+                          hiss text,
                           first integer,
                           second integer,
                           third integer,
@@ -59,6 +60,7 @@ class AccommodationDatabase:
                                                              :location,
                                                              :deadline,
                                                              :rent,
+                                                             :hiss,
                                                              :first,
                                                              :second,
                                                              :third,
@@ -76,7 +78,7 @@ class AccommodationDatabase:
         """ Takes tuple (from database) and zips it with the kwargs names of the
         Accommodation class """
 
-        property_names = ['address', 'url', 'type', 'location', 'deadline']
+        property_names = ['address', 'url', 'type', 'location', 'deadline', 'rent', 'hiss']
 
         return {**dict(zip(property_names, accommodation_properties[:-5])),
                 'queue': list(accommodation_properties[-5:])}
@@ -93,11 +95,14 @@ class AccommodationDatabase:
         search = "SELECT * FROM accommodations WHERE "
         for key, value in kwargs.items():
             if isinstance(value, list):
+                if len(value) > 0:
+                    search += "("
+
                 for val in value:
                     search += f"{key} LIKE '{val}' OR "
 
                 if len(value) > 0:
-                    search = search[:-3] + "AND "
+                    search = search[:-4] + ") AND "
             else:
                 search += f"{key} LIKE '{value}' AND "
 
