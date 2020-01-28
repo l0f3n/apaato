@@ -6,7 +6,7 @@
 #                          |
 #     +------------+-------+---------+----------------+
 #     |            |                 |                |
-# scraper.py   database.py   text_formatter.py   simulation.py
+# scraper.py   database.py   text_formatter.py    simulator.py
 #     |            |                 |                |
 #     +------------+-------+---------+----------------+
 #                          |
@@ -21,7 +21,7 @@ from datetime import datetime
 # Import framework
 import apaato.database as database
 import apaato.scraper as scraper
-import apaato.simulation as simulation
+import apaato.simulator as simulator
 import apaato.text_formatter as text_formatter
 
 def load_accommodations() -> None:
@@ -91,7 +91,7 @@ def simulate(other_points: int,
     # application acceptance date
     accommodations = list(acc_database.get_accommodations_with_deadline(earliest_deadline))
 
-    simulation_gen = simulation.run_simulation(other_points,
+    simulation_gen = simulator.run_simulation(other_points,
                                                accommodations,
                                                types,
                                                locations, )
