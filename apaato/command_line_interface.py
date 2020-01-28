@@ -46,6 +46,14 @@ def main():
                             help='(Default: False) Show link to accommodation',
                             action='store_true',)
 
+    list_parser.add_argument('--rent',
+                            help='(Default: False) Show the accommodations rent',
+                            action='store_true',)
+
+    list_parser.add_argument('--elevator',
+                            help='(Default: False) Show if the accommodation has an elevator',
+                            action='store_true',)
+
     list_parser.set_defaults(func=list_wrapper)
 
     # prob
@@ -67,7 +75,7 @@ def main():
                             help='(Default: all) Only apply for accommodation at location \
                                   [Ryd|Flamman|Vallastaden|Irrblosset| ... ]',)
 
-    prob_parser.add_argument('--hiss',
+    prob_parser.add_argument('--elevator',
                             type=str,
                             nargs='+',
                             help='(Default: all) Only apply for accommodation with elevator (Ja) or without (Nej) \

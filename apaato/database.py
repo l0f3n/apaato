@@ -36,7 +36,7 @@ class AccommodationDatabase:
                           location text,
                           deadline text,
                           rent integer,
-                          hiss text,
+                          elevator text,
                           first integer,
                           second integer,
                           third integer,
@@ -60,7 +60,7 @@ class AccommodationDatabase:
                                                              :location,
                                                              :deadline,
                                                              :rent,
-                                                             :hiss,
+                                                             :elevator,
                                                              :first,
                                                              :second,
                                                              :third,
@@ -78,7 +78,7 @@ class AccommodationDatabase:
         """ Takes tuple (from database) and zips it with the kwargs names of the
         Accommodation class """
 
-        property_names = ['address', 'url', 'type', 'location', 'deadline', 'rent', 'hiss']
+        property_names = ['address', 'url', 'type', 'location', 'deadline', 'rent', 'elevator']
 
         return {**dict(zip(property_names, accommodation_properties[:-5])),
                 'queue': list(accommodation_properties[-5:])}

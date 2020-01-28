@@ -20,7 +20,7 @@ class AccommodationListing:
         address and size """
 
         for name in self.kwargs:
-            setattr(self, f"{name}_length", max(len(getattr(a, name)) for a in self.accommodations) + 1)
+            setattr(self, f"{name}_length", max(len(str(getattr(a, name))) for a in self.accommodations) + 1)
 
     def print_accommodation(self, index: int, accommodation: Accommodation) -> None:
         """ Prints a single accommodation given its index """
