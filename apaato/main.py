@@ -67,9 +67,7 @@ def list_accommodations(show_link: bool = False,
         tf.print()
 
 
-def simulate(other_points: int,
-             types: list = [],
-             locations: list = [], ) -> None:
+def simulate(other_points: int, **kwargs) -> None:
     """ Runs simulation with other points and saves result in a database """
 
     acc_database = database.AccommodationDatabase()
@@ -90,7 +88,7 @@ def simulate(other_points: int,
     # Only simulate with the apartments that have the earliest deadline
     accommodations = list(acc_database.get_filtered_accommodations(deadline=deadline))
 
-    accommodations_to_apply_for = list(acc_database.get_filtered_accommodations(type=types, location=locations, deadline=deadline))
+    accommodations_to_apply_for = list(acc_database.get_filtered_accommodations(deadline=deadline, **kwargs))
 
     if len(accommodations_to_apply_for) == 0:
         print("No accommodation matched the specified critera.")

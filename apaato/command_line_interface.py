@@ -16,9 +16,9 @@ def list_wrapper(args):
 
 
 def simulation_wrapper(args):
-    combinations = commands.simulate(args.points,
-                                     types=args.types,
-                                     locations=args.locations, )
+    args_dict = vars(args)
+    del args_dict['func']
+    combinations = commands.simulate(args_dict.pop('points'), **args_dict)
     commands.list_probabilites(combinations)
 
 
@@ -55,19 +55,26 @@ def main():
                             type=int,
                             help='Queue points to simulate with',)
 
-    prob_parser.add_argument('--types',
+    prob_parser.add_argument('--type',
                             type=str,
                             nargs='+',
                             help='(Default: all) Only apply for accommodations of type \
                                   [Korridorrum|1 rum|2 rum|VALLAVÅNING| ... ]',)
 
-    prob_parser.add_argument('--locations',
+    prob_parser.add_argument('--location',
                             type=str,
                             nargs='+',
                             help='(Default: all) Only apply for accommodation at location \
                                   [Ryd|Flamman|Vallastaden|Irrblosset| ... ]',)
 
-    prob_parser.set_defaults(func=simulation_wrapper, types=[], locations=[])
+    prob_parser.add_argument('--hiss',
+                            type=str,
+                            nargs='+',
+                            help='(Default: all) Only apply for accommodation with elevator (Ja) or without (Nej) \
+                                  [Ja|Nej]',)
+
+
+    prob_parser.set_defaults(func=simulation_wrapper, type=[], location=[], hiss=[])
 
     clargs = parser.parse_args()
 
