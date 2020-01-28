@@ -2,6 +2,7 @@
 
 import apaato.main as commands
 import argparse
+import sys
 
 
 def load_wrapper(args):
@@ -24,14 +25,11 @@ def simulation_wrapper(args):
 def main():
 
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(title='commands',
-                                       description='Available commands',
-                                       help='Which command to run',)
+    subparsers = parser.add_subparsers()
 
     # load
     load_parser = subparsers.add_parser("load")
     load_parser.set_defaults(func=load_wrapper)
-
 
     # list
     list_parser = subparsers.add_parser("list")
@@ -49,7 +47,6 @@ def main():
                             action='store_true',)
 
     list_parser.set_defaults(func=list_wrapper)
-
 
     # prob
     prob_parser = subparsers.add_parser("prob")
@@ -73,5 +70,10 @@ def main():
     prob_parser.set_defaults(func=simulation_wrapper, types=[], locations=[])
 
     clargs = parser.parse_args()
+
+    # Quit if no arguments were supplied
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(-1)
 
     clargs.func(clargs)
