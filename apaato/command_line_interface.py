@@ -10,9 +10,9 @@ def load_wrapper(args):
 
 
 def list_wrapper(args):
-    commands.list_accommodations(show_link=args.link,
-                                 show_type=args.type,
-                                 show_location=args.location,)
+    args_dict = vars(args)
+    del args_dict['func']
+    commands.list_accommodations(**args_dict)
 
 
 def prob_wrapper(args):
@@ -42,7 +42,7 @@ def main():
                             help='(Default: False) Show the location that the accommodation is in',
                             action='store_true',)
 
-    list_parser.add_argument('-l', '--link',
+    list_parser.add_argument('--url',
                             help='(Default: False) Show link to accommodation',
                             action='store_true',)
 

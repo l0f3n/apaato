@@ -48,9 +48,7 @@ def load_accommodations() -> None:
     print(f'\nFinished in {time.time() - start_time:.3f} seconds')
 
 
-def list_accommodations(show_link: bool = False,
-                        show_type: bool = False,
-                        show_location: bool = False,) -> None:
+def list_accommodations(**kwargs) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
@@ -60,10 +58,8 @@ def list_accommodations(show_link: bool = False,
 
     for deadline in deadlines:
         print(f"Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}")
-        tf = text_formatter.AccommodationListing(acc_database.get_filtered_accommodations(deadline=deadline),
-                                                 show_link,
-                                                 show_type,
-                                                 show_location,)
+        accommodations = acc_database.get_filtered_accommodations(deadline=deadline)
+        tf = text_formatter.AccommodationListing(accommodations, address=True, **kwargs)
         tf.print()
 
 

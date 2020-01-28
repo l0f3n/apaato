@@ -1,6 +1,5 @@
 # text_formatter.py
 
-# Import Generator for annotations
 from typing import Generator
 
 # Import framework
@@ -10,50 +9,29 @@ from apaato.accommodation import Accommodation
 class AccommodationListing:
     """ Class that handles the printing of the accommodations """
 
-    def __init__(self,
-                 accommodations: list,
-                 show_link: bool = False,
-                 show_type: bool = False,
-                 show_location: bool = False, ):
+    def __init__(self, accommodations: list, **kwargs):
 
-        self.show_link     = show_link
-        self.show_type     = show_type
-        self.show_location = show_location
-
+        self.kwargs = kwargs
         self.accommodations = sorted(accommodations, key=lambda x: x.address[0])
-
-        self.address_length  = 0
-        self.type_length     = 0
-        self.location_length = 0
-
         self.calculate_padding()
 
     def calculate_padding(self) -> None:
         """ Calculates the correct amount of padding for the accommodation
         address and size """
 
-        self.address_length  = max(len(a.address)  for a in self.accommodations) + 1
-        self.type_length     = max(len(a.type)     for a in self.accommodations) + 1
-        self.location_length = max(len(a.location) for a in self.accommodations) + 1
+        for name in self.kwargs:
+            setattr(self, f"{name}_length", max(len(getattr(a, name)) for a in self.accommodations) + 1)
 
-    def print_accommodation(self,
-                            index: int,
-                            accommodation: Accommodation) -> None:
+    def print_accommodation(self, index: int, accommodation: Accommodation) -> None:
         """ Prints a single accommodation given its index """
 
-        # index
-        f_index = f"{index+1:>{len(str(len(self.accommodations)))}}: "
+        output = f"{index+1:>{len(str(len(self.accommodations)))}}: "
 
-        # accommodation
-        f_address = f"{accommodation.address:<{self.address_length}}"
+        for name, value in self.kwargs.items():
+            attr_name = f"{name}_length"
+            output += f"{getattr(accommodation, name):<{getattr(self, attr_name)}}" if value else ""
 
-        f_size = f"{accommodation.type:<{self.type_length}}"         if self.show_type     else ""
-        f_area = f"{accommodation.location:<{self.location_length}}" if self.show_location else ""
-        f_link = f"{accommodation.url}"                              if self.show_link     else ""
-
-        f_accommodation = f_index + f_address + f_size + f_area + f_link
-
-        print(f_accommodation)
+        print(output)
 
     def print(self):
         """ Prints all the accommodations """
