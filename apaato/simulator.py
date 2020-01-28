@@ -17,8 +17,7 @@ SIMULATIONS_PER_COMBINATION = 1000
 
 def run_simulation(other_points: int,
                    accommodations: list,
-                   types: list = [],
-                   locations: list = [], ) -> dict:
+                   accommodations_to_apply_for: list) -> dict:
     """ Runs simulation for every combination of accommodations that is
     desired """
 
@@ -27,20 +26,6 @@ def run_simulation(other_points: int,
         combination """
 
         return sum((accommodation[1] for accommodation in combination))
-
-    def filter_accommodations(accommodations: list,
-                              other_points: int) -> filter:
-        """ Returns a filter object of all accommodations that the user wants
-        to apply for """
-
-        def inner_filter(a: Accommodation) -> bool:
-
-            desired_type = True if types == [] else a.type in types
-            desired_location = True if locations == [] else a.location in locations
-
-            return desired_type and desired_location
-
-        return filter(inner_filter, accommodations)
 
     def nck(n: int, r: int) -> int:
         """ Used to calculate how many simulations are to be run """
@@ -66,16 +51,11 @@ def run_simulation(other_points: int,
 
         return True
 
-    # Find all desired accommodations
-    possible_accommodations = list(filter_accommodations(accommodations, other_points))
-
     # Calculate the amount of accommodations that are to be applied for at a
     # time
-    count = min(len(possible_accommodations), 5)
+    count = min(len(accommodations_to_apply_for), 5)
 
-    yield possible_accommodations
-
-    yield sum([nck(len(possible_accommodations), number)
+    yield sum([nck(len(accommodations_to_apply_for), number)
            for number in range(1, count+1)])
 
     # Keeps track of all accommodations that have a 100% or 0% chance.
@@ -87,7 +67,7 @@ def run_simulation(other_points: int,
     for number in range(1, count+1):
 
         # Find all combinations of all desired accommodations
-        combinations = itertools.combinations(possible_accommodations, number)
+        combinations = itertools.combinations(accommodations_to_apply_for, number)
 
         # For every combination of accommodations
         for current_combination in combinations:

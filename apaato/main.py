@@ -85,24 +85,23 @@ def simulate(other_points: int,
         sys.exit(-1)
 
     # Finds the earliest latest application acceptance date
-    earliest_deadline = min(accommodation.deadline for accommodation in acc_database.get_all_accommodations())
+    deadline = min(accommodation.deadline for accommodation in acc_database.get_all_accommodations())
 
-    # Only simulate with the apartments that have the earliest latest
-    # application acceptance date
-    accommodations = list(acc_database.get_filtered_accommodations(deadline=earliest_deadline))
+    # Only simulate with the apartments that have the earliest deadline
+    accommodations = list(acc_database.get_filtered_accommodations(deadline=deadline))
 
-    simulation_gen = simulator.run_simulation(other_points,
-                                               accommodations,
-                                               types,
-                                               locations, )
+    accommodations_to_apply_for = list(acc_database.get_filtered_accommodations(type=types, location=locations, deadline=deadline))
 
-    desired_accommodations = next(simulation_gen)
-
-    if len(desired_accommodations) == 0:
+    if len(accommodations_to_apply_for) == 0:
         print("No accommodation matched the specified critera.")
         sys.exit(-1)
 
-    print(f'Simulating with {len(desired_accommodations)} accommodations...')
+    simulation_gen = simulator.run_simulation(other_points,
+                                               accommodations,
+                                               accommodations_to_apply_for,
+                                            )
+
+    print(f'Simulating with {len(accommodations_to_apply_for)} accommodations...')
 
     total_combinations = next(simulation_gen)
 
