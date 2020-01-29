@@ -6,7 +6,7 @@
 #                          |
 #     +------------+-------+---------+----------------+
 #     |            |                 |                |
-# scraper.py   database.py   text_formatter.py    simulator.py
+# scraper.py   database.py       printer.py      simulator.py
 #     |            |                 |                |
 #     +------------+-------+---------+----------------+
 #                          |
@@ -22,7 +22,7 @@ from datetime import datetime
 import apaato.database as database
 import apaato.scraper as scraper
 import apaato.simulator as simulator
-import apaato.text_formatter as text_formatter
+import apaato.printer as printer
 
 def load_accommodations() -> None:
     """ Loads all accommodations from studentbostader.se into the database """
@@ -43,7 +43,7 @@ def load_accommodations() -> None:
     for current, accommodation in enumerate(accommodations_gen, start=1):
         acc_database.insert_accommodation(accommodation)
 
-        text_formatter.print_progress_bar(current/total)
+        printer.print_progress_bar(current/total)
 
     print(f'\nFinished in {time.time() - start_time:.3f} seconds')
 
@@ -59,7 +59,7 @@ def list_accommodations(**kwargs) -> None:
     for deadline in deadlines:
         print(f"Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}")
         accommodations = acc_database.get_filtered_accommodations(deadline=deadline)
-        text_formatter.print_accommodations(accommodations, address=True, **kwargs)
+        printer.print_accommodations(accommodations, address=True, **kwargs)
 
 
 def simulate(other_points: int, **kwargs) -> None:
@@ -106,9 +106,9 @@ def simulate(other_points: int, **kwargs) -> None:
     for current, result in enumerate(simulation_gen, start=1):
         combinations.append(result)
 
-        text_formatter.print_progress_bar(current/total_combinations)
+        printer.print_progress_bar(current/total_combinations)
 
-    text_formatter.print_progress_bar(1)
+    printer.print_progress_bar(1)
 
     print(f'\nFinished in {time.time() - start_time:.3} seconds')
 
@@ -119,5 +119,5 @@ def list_probabilites(combinations):
     """ Print all combinations sorted by the chance of getting any of the
     accommodations in that combination """
 
-    tf = text_formatter.CombintationListing(combinations)
+    tf = printer.CombintationListing(combinations)
     tf.print()
