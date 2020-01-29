@@ -59,8 +59,7 @@ def list_accommodations(**kwargs) -> None:
     for deadline in deadlines:
         print(f"Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}")
         accommodations = acc_database.get_filtered_accommodations(deadline=deadline)
-        tf = text_formatter.AccommodationListing(accommodations, address=True, **kwargs)
-        tf.print()
+        text_formatter.print_accommodations(accommodations, address=True, **kwargs)
 
 
 def simulate(other_points: int, **kwargs) -> None:

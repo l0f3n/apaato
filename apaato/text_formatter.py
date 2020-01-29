@@ -6,38 +6,22 @@ from typing import Generator
 from apaato.accommodation import Accommodation
 
 
-class AccommodationListing:
-    """ Class that handles the printing of the accommodations """
+def print_accommodations(accommodations: list, **kwargs):
+    accommodations = sorted(accommodations, key=lambda x: x.address[0])
 
-    def __init__(self, accommodations: list, **kwargs):
+    lengths = {}
 
-        self.kwargs = kwargs
-        self.accommodations = sorted(accommodations, key=lambda x: x.address[0])
-        self.calculate_padding()
+    for key in kwargs:
+        lengths[key] = max(len(str(getattr(a, key))) for a in accommodations) + 1
 
-    def calculate_padding(self) -> None:
-        """ Calculates the correct amount of padding for the accommodation
-        address and size """
+    final = ''
+    for index, accommodation in enumerate(accommodations):
+        partial = f"{index+1:>{len(str(len(accommodations)))}}: "
+        for name, value in kwargs.items():
+            partial += f"{getattr(accommodation, name):<{lengths[name]}}" if value else ""
+        final += partial + '\n'
 
-        for name in self.kwargs:
-            setattr(self, f"{name}_length", max(len(str(getattr(a, name))) for a in self.accommodations) + 1)
-
-    def print_accommodation(self, index: int, accommodation: Accommodation) -> None:
-        """ Prints a single accommodation given its index """
-
-        output = f"{index+1:>{len(str(len(self.accommodations)))}}: "
-
-        for name, value in self.kwargs.items():
-            attr_name = f"{name}_length"
-            output += f"{getattr(accommodation, name):<{getattr(self, attr_name)}}" if value else ""
-
-        print(output)
-
-    def print(self):
-        """ Prints all the accommodations """
-
-        for index, accommodation in enumerate(self.accommodations):
-            self.print_accommodation(index, accommodation)
+    print(final)
 
 
 class CombintationListing:
