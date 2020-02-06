@@ -42,6 +42,10 @@ def main():
                             help='(Default: False) Display location: [Ryd|Irrblosset|Lambohov|...]',
                             action='store_true',)
 
+    list_parser.add_argument('--queue',
+                            help='(Default: False) Display queue',
+                            action='store_true',)
+
     list_parser.add_argument('--rent',
                             help='(Default: False) Display rent',
                             action='store_true',)

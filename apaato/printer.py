@@ -18,7 +18,7 @@ def print_accommodations(accommodations: list, **kwargs):
     for index, accommodation in enumerate(accommodations):
         partial = f"{index+1:>{len(str(len(accommodations)))}}: "
         for name, value in kwargs.items():
-            partial += f"{getattr(accommodation, name):<{lengths[name]}}" if value else ""
+            partial += f"{str(getattr(accommodation, name)):<{lengths[name]}}" if value else ""
         final += partial + '\n'
 
     print(final)
