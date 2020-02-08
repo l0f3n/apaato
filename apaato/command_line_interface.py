@@ -25,6 +25,12 @@ def prob_wrapper(args):
 def main():
 
     parser = argparse.ArgumentParser()
+
+    # Quit if no arguments were supplied
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(-1)
+
     subparsers = parser.add_subparsers()
 
     # load
@@ -82,14 +88,8 @@ def main():
                             nargs='+',
                             help='(Default: all) Only apply for elevator=[Ja|Nej] (Yes|No)', )
 
-
     prob_parser.set_defaults(func=prob_wrapper)
 
     clargs = parser.parse_args()
-
-    # Quit if no arguments were supplied
-    if len(sys.argv) == 1:
-        parser.print_help(sys.stderr)
-        sys.exit(-1)
 
     clargs.func(clargs)
