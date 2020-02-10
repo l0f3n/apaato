@@ -6,15 +6,24 @@ from typing import Generator
 from apaato.accommodation import Accommodation
 
 
-def print_accommodations(accommodations: list, **kwargs):
+def print_accommodations(accommodations: list, heading: bool = True, **kwargs):
     accommodations = sorted(accommodations, key=lambda x: x.address[0])
 
     lengths = {}
 
     for key in kwargs:
-        lengths[key] = max(len(str(getattr(a, key))) for a in accommodations) + 1
+        lengths[key] = max(
+            [len(str(getattr(a, key))) for a in accommodations] + [len(key) if heading else 0]
+            ) + 1
 
-    final = ''
+    final = ""
+
+    if heading:
+        partial = " "*len(str(len(accommodations))) + "  "
+        for name, value in kwargs.items():
+            partial += f"{name:<{lengths[name]}}".capitalize() if value else ""
+        final += partial + "\n"
+
     for index, accommodation in enumerate(accommodations):
         partial = f"{index+1:>{len(str(len(accommodations)))}}: "
         for name, value in kwargs.items():
