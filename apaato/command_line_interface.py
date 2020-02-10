@@ -103,6 +103,10 @@ def main():
                             nargs='+',
                             help='(Default: all) Only apply for elevator=[Ja|Nej] (Yes|No)', )
 
+    prob_parser.add_argument('--size',
+                            type=str,
+                            help='(Default: all) Only apply for size>=argument', )
+
     prob_parser.set_defaults(func=prob_wrapper)
 
     clargs = parser.parse_args()

@@ -33,8 +33,9 @@ def fetch_accommodation(accommodation_data: dict) -> dict:
         "url": accommodation_data["detaljUrl"],
         "type": accommodation_data["typ"],
         "location": accommodation_data["omrade"],
-        "rent": ''.join(accommodation_data["hyra"].split()),
+        "rent": int(''.join(accommodation_data["hyra"].split())),
         "elevator": accommodation_data["hiss"],
+        "size": float(accommodation_data["yta"]),
     }
 
     # Get text that has information about the queue

@@ -37,6 +37,7 @@ class AccommodationDatabase:
                           deadline text,
                           rent integer,
                           elevator text,
+                          size integer,
                           first integer,
                           second integer,
                           third integer,
@@ -61,6 +62,7 @@ class AccommodationDatabase:
                                                              :deadline,
                                                              :rent,
                                                              :elevator,
+                                                             :size,
                                                              :first,
                                                              :second,
                                                              :third,
@@ -102,6 +104,8 @@ class AccommodationDatabase:
             elif value is not None:
                 if key == 'rent':
                     search += f"{key} <= '{value}' AND "
+                elif key == 'size':
+                    search += f"{key} >= '{value}' AND "
                 else:
                     search += f"{key} = '{value}' AND "
 
