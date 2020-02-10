@@ -54,12 +54,12 @@ def fetch_accommodation(accommodation_data: dict) -> dict:
     # Create a list of all the matches without leading space
     matches = queue_points_pattern.findall(top_five_queue_points_text)
 
-    # The first match is the number of applicants
-    number_of_applicants = int(matches.pop(0)) if len(matches) > 0 else 0
+    # The number of visible queue points
+    num_visible_queue_points = max(len(matches) - 1, 0)
 
     # Remove whitespace and convert all matches to ints, right pad the list
-    # with zeros to make it length 5.
-    queue = [int(''.join(matches[i].split())) if i < number_of_applicants else 0 for i in range(5)]
+    # with zeros to make it length 5. First match is # of applicants so i -> i+1.
+    queue = [int(''.join(matches[i+1].split())) if i < num_visible_queue_points else 0 for i in range(5)]
     accommodation_properties['queue'] = queue
 
     ##### DEADLINE #####
