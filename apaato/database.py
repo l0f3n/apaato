@@ -17,10 +17,10 @@ class AccommodationDatabase:
     def __init__(self, new_database: bool = False):
 
         if new_database:
-            try:
+            if Path(dir_name + file_name).is_file():
+                os.remove(dir_name + file_name)
+            elif not Path(dir_name).is_dir():
                 os.mkdir(dir_name)
-            except FileExistsError:
-                pass
         else:
             if not Path(dir_name + file_name).is_file():
                 print("No database found. Please run 'apaato load'.")
