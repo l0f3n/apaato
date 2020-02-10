@@ -80,7 +80,16 @@ class AccommodationDatabase:
         """ Takes tuple (from database) and zips it with the kwargs names of the
         Accommodation class """
 
-        property_names = ['address', 'url', 'type', 'location', 'deadline', 'rent', 'elevator']
+        property_names = [
+            'address', 
+            'url', 
+            'type', 
+            'location', 
+            'deadline', 
+            'rent', 
+            'elevator', 
+            'size',
+        ]
 
         return {**dict(zip(property_names, accommodation_properties[:-5])),
                 'queue': list(accommodation_properties[-5:])}

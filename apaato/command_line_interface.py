@@ -70,6 +70,10 @@ def main():
     list_parser.add_argument('--elevator',
                             help='(Default: False) Display elevator status [Ja|Nej] (Yes|No)',
                             action='store_true',)
+    
+    list_parser.add_argument('--size',
+                        help='(Default: False) Display size',
+                        action='store_true',)
 
     list_parser.add_argument('--url',
                             help='(Default: False) Display url',
