@@ -12,6 +12,13 @@ def load_wrapper(args):
 def list_wrapper(args):
     args_dict = vars(args)
     del args_dict['func']
+
+    if args.all:
+        for key in args_dict:
+            args_dict[key] = True
+
+    del args_dict['all']
+        
     commands.list_accommodations(**args_dict)
 
 
@@ -39,6 +46,10 @@ def main():
 
     # list
     list_parser = subparsers.add_parser("list")
+
+    list_parser.add_argument('--all',
+                            help='(Default: False) Display all properties',
+                            action='store_true',)
 
     list_parser.add_argument('--type',
                             help='(Default: False) Display type: [Korridorrum|1 rum|2 rum|VALLAVÅNING|...]',
