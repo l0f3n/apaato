@@ -38,6 +38,7 @@ class AccommodationDatabase:
                           rent integer,
                           elevator text,
                           size integer,
+                          floor integer,
                           first integer,
                           second integer,
                           third integer,
@@ -63,6 +64,7 @@ class AccommodationDatabase:
                                                              :rent,
                                                              :elevator,
                                                              :size,
+                                                             :floor,
                                                              :first,
                                                              :second,
                                                              :third,
@@ -89,6 +91,7 @@ class AccommodationDatabase:
             'rent', 
             'elevator', 
             'size',
+            'floor',
         ]
 
         return {**dict(zip(property_names, accommodation_properties[:-5])),

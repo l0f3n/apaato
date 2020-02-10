@@ -74,6 +74,10 @@ def main():
     list_parser.add_argument('--size',
                         help='(Default: False) Display size',
                         action='store_true',)
+    
+    list_parser.add_argument('--floor',
+                        help='(Default: False) Display floor',
+                        action='store_true',)
 
     list_parser.add_argument('--url',
                             help='(Default: False) Display url',
@@ -110,6 +114,11 @@ def main():
     prob_parser.add_argument('--size',
                             type=str,
                             help='(Default: all) Only apply for size>=argument', )
+    
+    prob_parser.add_argument('--floor',
+                            type=str,
+                            nargs='+',
+                            help='(Default: all) Only apply for floor=[1|2|3|4]', )
 
     prob_parser.set_defaults(func=prob_wrapper)
 
