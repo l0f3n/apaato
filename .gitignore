@@ -2,5 +2,4 @@ __pycache__
 accommodations.db
 accommodations_db.sqlite
 apaato.egg-info
-geckodriver.log
-geckodriver
+apaato_env
