@@ -45,7 +45,7 @@ def load_accommodations() -> None:
 
         printer.print_progress_bar(current/total)
 
-    print(f'\nFinished in {time.time() - start_time:.3f} seconds')
+    print(f'\nFinished in {time.time() - start_time:.1f} seconds')
 
 
 def list_accommodations(**kwargs) -> None:
@@ -86,7 +86,7 @@ def simulate(other_points: int, **kwargs) -> None:
     accommodations_to_apply_for = list(acc_database.get_filtered_accommodations(deadline=deadline, **kwargs))
 
     if len(accommodations_to_apply_for) == 0:
-        print("No accommodation matched the specified critera.")
+        print("No accommodation matched the critera.")
         sys.exit(-1)
 
     simulation_gen = simulator.run_simulation(other_points,
@@ -94,7 +94,7 @@ def simulate(other_points: int, **kwargs) -> None:
                                                accommodations_to_apply_for,
                                             )
 
-    print(f'Simulating with {len(accommodations_to_apply_for)} accommodations...')
+    print(f'{len(accommodations_to_apply_for)} accommodations matched the criteria...')
 
     total_combinations = next(simulation_gen)
 
@@ -110,7 +110,7 @@ def simulate(other_points: int, **kwargs) -> None:
 
     printer.print_progress_bar(1)
 
-    print(f'\nFinished in {time.time() - start_time:.3} seconds')
+    print(f'\nFinished in {time.time() - start_time:.1} seconds')
 
     return combinations
 
