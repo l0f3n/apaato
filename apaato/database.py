@@ -97,10 +97,13 @@ class AccommodationDatabase:
             if isinstance(value, list):
                 search += "("
                 for val in value:
-                    search += f"{key} LIKE '{val}' OR "
+                    search += f"{key} = '{val}' OR "
                 search = search[:-4] + ") AND "
             elif value is not None:
-                search += f"{key} LIKE '{value}' AND "
+                if key == 'rent':
+                    search += f"{key} <= '{value}' AND "
+                else:
+                    search += f"{key} = '{value}' AND "
 
         if len(kwargs) > 0:
             search = search[:-5]

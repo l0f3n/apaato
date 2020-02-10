@@ -83,6 +83,10 @@ def main():
                             nargs='+',
                             help='(Default: all) Only apply for location=[Ryd|Irrblosset|Lambohov|...]',)
 
+    prob_parser.add_argument('--rent',
+                            type=str,
+                            help='(Default: all) Only apply for rent<=argument', )
+
     prob_parser.add_argument('--elevator',
                             type=str,
                             nargs='+',
