@@ -36,8 +36,14 @@ def fetch_accommodation(accommodation_data: dict) -> dict:
         "rent": int(''.join(accommodation_data["hyra"].split())),
         "elevator": accommodation_data["hiss"],
         "size": float(accommodation_data["yta"]),
-        "floor": int(accommodation_data["vaning"]),
     }
+
+    try:
+        accommodation_properties["floor"] = int(accommodation_data["vaning"])
+    except ValueError:
+        floor_pattern = re.compile(r"\.\d")
+        floor = floor_pattern.search(accommodation_properties["address"]).group()[1:]
+        accommodation_properties["floor"] = floor
 
     # Get text that has information about the queue
     response = requests.get(SINGLE_ACCOMMODATION_URL.format(accommodation_data["detaljUrl"][-64:]))
