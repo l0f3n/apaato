@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import sqlite3
 import sys
-from typing import Generator
+from typing import Any, Dict, Generator, Tuple
 
 # Import framework
 from apaato.accommodation import Accommodation
@@ -13,7 +13,7 @@ FILE_PATH = Path(__file__).parent / "accommodations.db"
 
 class AccommodationDatabase:
 
-    def __init__(self, new_database: bool = False):
+    def __init__(self, new_database: bool = False) -> None:
 
         if new_database:
             if FILE_PATH.is_file():
@@ -72,12 +72,12 @@ class AccommodationDatabase:
                       acc_prop)
 
 
-    def to_accommodation(self, accommodation_properties: tuple) -> Accommodation:
+    def to_accommodation(self, accommodation_properties: Tuple[Any, ...]) -> Accommodation:
         """ Makes a new Accommodation object from tuple from sql query """
 
         return Accommodation(**self.to_dict(accommodation_properties))
 
-    def to_dict(self, accommodation_properties: tuple) -> dict:
+    def to_dict(self, accommodation_properties: Tuple[Any, ...]) -> Dict[str, Any]:
         """ Takes tuple (from database) and zips it with the kwargs names of the
         Accommodation class """
 
@@ -127,7 +127,7 @@ class AccommodationDatabase:
 
         yield from self.query(search)
 
-    def get_all_accommodations(self):
+    def get_all_accommodations(self) -> Generator[Accommodation, None, None]:
         search = "SELECT * FROM accommodations"
         yield from self.query(search)
 
