@@ -9,24 +9,23 @@ from typing import Generator
 # Import framework
 from apaato.accommodation import Accommodation
 
-dir_name = os.path.expanduser('~/Documents/apaato')
-file_name = "/accommodations_db.sqlite"
+FILE_PATH = Path(__file__).parent / "accommodations.db"
 
 class AccommodationDatabase:
 
     def __init__(self, new_database: bool = False):
 
         if new_database:
-            if Path(dir_name + file_name).is_file():
-                os.remove(dir_name + file_name)
-            elif not Path(dir_name).is_dir():
-                os.mkdir(dir_name)
+            if FILE_PATH.is_file():
+                os.remove(FILE_PATH)
+            elif not FILE_PATH.parent.is_dir():
+                os.mkdir(FILE_PATH.parent)
         else:
-            if not Path(dir_name + file_name).is_file():
-                print("No database found. Please run 'apaato load'.")
+            if not FILE_PATH.is_file():
+                print("No database found. Please run 'apaato load' first.")
                 sys.exit()
 
-        self.conn = sqlite3.connect(dir_name + file_name)
+        self.conn = sqlite3.connect(FILE_PATH)
 
         self.curs = self.conn.cursor()
         self.curs.execute(""" CREATE TABLE IF NOT EXISTS accommodations (
