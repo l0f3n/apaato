@@ -3,6 +3,7 @@
 import json
 import re
 import requests
+from typing import Dict, Generator, Union
 
 # Import framework
 from apaato.accommodation import Accommodation
@@ -11,7 +12,7 @@ ALL_ACCOMMODATIONS_URL = 'https://marknad.studentbostader.se/widgets/?pagination
 SINGLE_ACCOMMODATION_URL = 'https://marknad.studentbostader.se/widgets/?refid={}&callback=&widgets[]=koerochprenumerationer@STD&widgets[]=objektinformation@lagenheter&widgets[]=objektforegaende&widgets[]=objektnasta&widgets[]=objektbilder&widgets[]=objektfritext&widgets[]=objektinformation@lagenheter&widgets[]=objektegenskaper&widgets[]=objektdokument&widgets[]=alert&widgets[]=objektintresse&widgets[]=objektintressestatus&widgets[]=objektkarta&_=1545230378811'
 
 
-def fetch_all_accommodations():
+def fetch_all_accommodations() -> Generator[Union[int, Accommodation], None, None]:
     """ Yields all an accommodation object for every accommodation currently 
     available """
 
@@ -24,7 +25,7 @@ def fetch_all_accommodations():
         yield fetch_accommodation(accommodation_data)
 
 
-def fetch_accommodation(accommodation_data: dict) -> dict:
+def fetch_accommodation(accommodation_data: Dict[str, str]) -> Accommodation:
     """ Gathers information about a single accommodation """
 
     # Store information about a single accommodation
@@ -42,7 +43,7 @@ def fetch_accommodation(accommodation_data: dict) -> dict:
         accommodation_properties["floor"] = int(accommodation_data["vaning"])
     except ValueError:
         floor_pattern = re.compile(r"\.\d")
-        floor = floor_pattern.search(accommodation_properties["address"]).group()[1:]
+        floor = floor_pattern.search(accommodation_properties["address"]).group()[1:]  # type: ignore
         accommodation_properties["floor"] = floor
 
     # Get text that has information about the queue
@@ -78,7 +79,7 @@ def fetch_accommodation(accommodation_data: dict) -> dict:
 
     # Find deadline in text and add it accommodations_properties
     try:
-        deadline = deadline_pattern.search(deadline_text).group()
+        deadline = deadline_pattern.search(deadline_text).group()  # type: ignore
     except AttributeError:
         # If date wasn't found, it means that it was an Accommodation Direct
         deadline = "9999-99-99"

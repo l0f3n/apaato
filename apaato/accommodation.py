@@ -1,8 +1,11 @@
 # accommodation.py
 
+from typing import List
 
 class Accommodation:
     """ Class used to store all the information about an accommodation """
+
+    queue: List[int]
 
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
