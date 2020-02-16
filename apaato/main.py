@@ -17,6 +17,7 @@ import os
 import sys
 import time
 from datetime import datetime
+from typing import List, Tuple
 
 # Import framework
 import apaato.database as database
@@ -41,9 +42,9 @@ def load_accommodations() -> None:
     print('Fetching data about each accommodation... ')
 
     for current, accommodation in enumerate(accommodations_gen, start=1):
-        acc_database.insert_accommodation(accommodation)
+        acc_database.insert_accommodation(accommodation) # type: ignore
 
-        printer.print_progress_bar(current/total)
+        printer.print_progress_bar(current/total) # type: ignore
 
     print(f'\nFinished in {time.time() - start_time:.1f} seconds')
 
@@ -62,7 +63,7 @@ def list_accommodations(**kwargs) -> None:
         printer.print_accommodations(accommodations, address=True, **kwargs)
 
 
-def simulate(other_points: int, **kwargs) -> None:
+def simulate(other_points: int, **kwargs) -> List[Tuple[str, float]]:
     """ Runs simulation with other points and saves result in a database """
 
     acc_database = database.AccommodationDatabase()
@@ -96,7 +97,7 @@ def simulate(other_points: int, **kwargs) -> None:
 
     print(f'{len(accommodations_to_apply_for)} accommodations matched the criteria...')
 
-    total_combinations = next(simulation_gen)
+    total_combinations = next(simulation_gen)  # type: ignore
 
     # Store all results from simulation
     combinations = []

@@ -1,12 +1,12 @@
-# text_formatter.py
+# printer.py
 
-from typing import Generator
+from typing import Generator, List
 
 # Import framework
 from apaato.accommodation import Accommodation
 
 
-def print_accommodations(accommodations: list, heading: bool = True, **kwargs):
+def print_accommodations(accommodations: List[Accommodation], heading: bool = True, **kwargs) -> None:
     accommodations = sorted(accommodations, key=lambda x: x.address[0])
 
     lengths = {}

@@ -1,10 +1,13 @@
 # accommodation.py
 
+from datetime import date
 from typing import List
 
 class Accommodation:
     """ Class used to store all the information about an accommodation """
 
+    address: str
+    deadline: date
     queue: List[int]
 
     def __init__(self, **kwargs):
