@@ -58,7 +58,7 @@ def list_accommodations(**kwargs) -> None:
     deadlines = sorted(set(accommodation.deadline for accommodation in acc_database.get_all_accommodations()))
 
     for deadline in deadlines:
-        print(f"Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}")
+        print(f"[Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}]")
         accommodations = acc_database.get_filtered_accommodations(deadline=deadline)
         printer.print_accommodations(accommodations, address=True, **kwargs)
 

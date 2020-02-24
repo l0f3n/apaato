@@ -19,13 +19,13 @@ def print_accommodations(accommodations: List[Accommodation], heading: bool = Tr
     final = ""
 
     if heading:
-        partial = " "*len(str(len(accommodations))) + "  "
+        partial = "" # " "*len(str(len(accommodations))) + "  "
         for name, value in kwargs.items():
             partial += f"{name:<{lengths[name]}}".capitalize() if value else ""
         final += partial + "\n"
 
     for index, accommodation in enumerate(accommodations):
-        partial = f"{index+1:>{len(str(len(accommodations)))}}: "
+        partial = "" # f"{index+1:>{len(str(len(accommodations)))}}: "
         for name, value in kwargs.items():
             partial += f"{str(getattr(accommodation, name)):<{lengths[name]}}" if value else ""
         final += partial + '\n'
