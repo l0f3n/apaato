@@ -7,30 +7,52 @@ from apaato.accommodation import Accommodation
 
 
 def print_accommodations(accommodations: List[Accommodation], heading: bool = True, **kwargs) -> None:
-    accommodations = sorted(accommodations, key=lambda x: x.address[0])
+    accommodations = sorted(accommodations, key=lambda a: a.address)
 
-    lengths = {}
+    # Calculates length of the longest value in each column.
+    # {
+    #   'address' : 18,
+    #   'type' : 5,
+    #   'location' : 8,
+    #         .
+    #         .
+    # }
+    lengths = {key: max(
+        [len(str(getattr(a, key))) for a in accommodations]
+        + [len(key) if heading else 0]
+        )
+        for key in kwargs}
 
-    for key in kwargs:
-        lengths[key] = max(
-            [len(str(getattr(a, key))) for a in accommodations] + [len(key) if heading else 0]
-            ) + 1
+    # Creates a list with all headers. Each string is right-padded
+    # according to maximum property length in each column.
+    # ['Address', 'Type', 'Location', ...]
+    header = [
+        f"{name:<{lengths[name]}}".capitalize()
+        for name, value in kwargs.items()
+        if value
+        ] if heading else []
 
-    final = ""
+    # Creates a list of lists containing all accommodations. Each string is
+    # right-padded according to maximum property length in each column.
+    # [
+    #   ['Rydsvägen 252 C.17', '1 rum', 'Ryd', ...]
+    #                     .
+    #                     .
+    # ]
+    accommodation_list = [
+            [
+            f"{str(getattr(accommodation, name)):<{lengths[name]}}"
+            for name, value in kwargs.items()
+            if value
+            ] for accommodation in accommodations
+        ]
 
-    if heading:
-        partial = "" # " "*len(str(len(accommodations))) + "  "
-        for name, value in kwargs.items():
-            partial += f"{name:<{lengths[name]}}".capitalize() if value else ""
-        final += partial + "\n"
+    output = '\n'.join(
+        [' '.join(header)]
+        + [' '.join(accommodation) for accommodation in accommodation_list]
+        ) + '\n'
 
-    for index, accommodation in enumerate(accommodations):
-        partial = "" # f"{index+1:>{len(str(len(accommodations)))}}: "
-        for name, value in kwargs.items():
-            partial += f"{str(getattr(accommodation, name)):<{lengths[name]}}" if value else ""
-        final += partial + '\n'
-
-    print(final)
+    print(output)
 
 
 class CombintationListing:
