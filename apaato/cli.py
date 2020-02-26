@@ -11,7 +11,7 @@ def load_wrapper(args):
 
 def list_wrapper(args):
     display = {name: True for name in args.display}
-    commands.list_accommodations(**display)
+    commands.list_accommodations(display)
 
 
 def prob_wrapper(args):
@@ -96,5 +96,5 @@ def main():
     prob_parser.set_defaults(func=prob_wrapper)
 
     clargs = parser.parse_args()
-    
+
     clargs.func(clargs)

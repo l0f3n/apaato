@@ -17,7 +17,7 @@ import os
 import sys
 import time
 from datetime import datetime
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 # Import framework
 import apaato.database as database
@@ -49,7 +49,7 @@ def load_accommodations() -> None:
     print(f'\nFinished in {time.time() - start_time:.1f} seconds')
 
 
-def list_accommodations(**kwargs) -> None:
+def list_accommodations(display: Dict[str, bool]) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
@@ -60,7 +60,7 @@ def list_accommodations(**kwargs) -> None:
     for deadline in deadlines:
         print(f"[Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}]")
         accommodations = acc_database.get_filtered_accommodations(deadline=deadline)
-        printer.print_accommodations(accommodations, **kwargs)
+        printer.print_accommodations(accommodations, display)
 
 
 def simulate(other_points: int, **kwargs) -> List[Tuple[str, float]]:

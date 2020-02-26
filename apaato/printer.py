@@ -1,12 +1,15 @@
 # printer.py
 
-from typing import Generator, List
+from typing import Dict, Generator, List
 
 # Import framework
 from apaato.accommodation import Accommodation
 
 
-def print_accommodations(accommodations: List[Accommodation], heading: bool = True, **kwargs) -> None:
+def print_accommodations(accommodations: List[Accommodation], 
+    display: Dict[str, bool],
+    heading: bool = True) -> None:
+
     accommodations = sorted(accommodations, key=lambda a: a.address)
 
     # Calculates length of the longest value in each column.
@@ -21,14 +24,14 @@ def print_accommodations(accommodations: List[Accommodation], heading: bool = Tr
         [len(str(getattr(a, key))) for a in accommodations]
         + [len(key) if heading else 0]
         )
-        for key in kwargs}
+        for key in display}
 
     # Creates a list with all headers. Each string is right-padded
     # according to maximum property length in each column.
     # ['Address', 'Type', 'Location', ...]
     header = [
         f"{name:<{lengths[name]}}".capitalize()
-        for name, value in kwargs.items()
+        for name, value in display.items()
         if value
         ] if heading else []
 
@@ -42,7 +45,7 @@ def print_accommodations(accommodations: List[Accommodation], heading: bool = Tr
     accommodation_list = [
             [
             f"{str(getattr(accommodation, name)):<{lengths[name]}}"
-            for name, value in kwargs.items()
+            for name, value in display.items()
             if value
             ] for accommodation in accommodations
         ]
