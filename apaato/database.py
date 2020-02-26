@@ -104,9 +104,9 @@ class AccommodationDatabase:
             self.curs.execute(query_text)
             yield from map(self.to_accommodation, self.curs.fetchall())
 
-    def get_filtered_accommodations(self, **kwargs):
+    def get_filtered_accommodations(self, filter_: Dict[str, Any]) -> Generator[Accommodation, None, None]:
         search = "SELECT * FROM accommodations WHERE "
-        for key, value in kwargs.items():
+        for key, value in filter_.items():
             if isinstance(value, list):
                 search += "("
                 for val in value:
@@ -120,7 +120,7 @@ class AccommodationDatabase:
                 else:
                     search += f"{key} = '{value}' AND "
 
-        if len(kwargs) > 0:
+        if len(filter_) > 0:
             search = search[:-5]
         else:
             search = search[:-7]

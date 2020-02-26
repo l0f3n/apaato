@@ -17,7 +17,7 @@ import os
 import sys
 import time
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 # Import framework
 import apaato.database as database
@@ -49,7 +49,7 @@ def load_accommodations() -> None:
     print(f'\nFinished in {time.time() - start_time:.1f} seconds')
 
 
-def list_accommodations(display: Dict[str, bool]) -> None:
+def list_accommodations(display: Dict[str, bool], filter_: Dict[str, Any]) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
@@ -58,12 +58,16 @@ def list_accommodations(display: Dict[str, bool]) -> None:
     deadlines = sorted(set(accommodation.deadline for accommodation in acc_database.get_all_accommodations()))
 
     for deadline in deadlines:
-        print(f"[Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}]")
-        accommodations = acc_database.get_filtered_accommodations(deadline=deadline)
-        printer.print_accommodations(accommodations, display)
+        filter_['deadline'] = deadline
+        accommodations = list(acc_database.get_filtered_accommodations(filter_))
+        
+        if len(accommodations) > 0:
+            print(f"[Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}]")
+            printer.print_accommodations(accommodations, display)
 
 
-def simulate(other_points: int, **kwargs) -> List[Tuple[str, float]]:
+def simulate(other_points: int, 
+    filter_: Dict[str, Any]) -> List[Tuple[str, float]]:
     """ Runs simulation with other points and saves result in a database """
 
     acc_database = database.AccommodationDatabase()
@@ -80,11 +84,13 @@ def simulate(other_points: int, **kwargs) -> List[Tuple[str, float]]:
 
     # Finds the earliest latest application acceptance date
     deadline = min(accommodation.deadline for accommodation in acc_database.get_all_accommodations())
+    deadline_filter = {'deadline' : deadline}
 
     # Only simulate with the apartments that have the earliest deadline
-    accommodations = list(acc_database.get_filtered_accommodations(deadline=deadline))
+    accommodations = list(acc_database.get_filtered_accommodations(deadline_filter))
 
-    accommodations_to_apply_for = list(acc_database.get_filtered_accommodations(deadline=deadline, **kwargs))
+    filter_.update(deadline_filter)
+    accommodations_to_apply_for = list(acc_database.get_filtered_accommodations(filter_))
 
     if len(accommodations_to_apply_for) == 0:
         print("No accommodation matched the critera.")
