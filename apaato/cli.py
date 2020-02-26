@@ -37,11 +37,16 @@ def main():
     subparsers = parser.add_subparsers()
 
     # load
-    load_parser = subparsers.add_parser("load")
+    load_parser = subparsers.add_parser('load',
+        help='loads all accommodations into a database.',
+    )
     load_parser.set_defaults(func=load_wrapper)
 
     # list
-    list_parser = subparsers.add_parser("list", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    list_parser = subparsers.add_parser('list', 
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        help='lists all accommodations.',
+    )
 
     list_parser.add_argument('--display',
         action='extend',
@@ -97,15 +102,18 @@ def main():
     list_parser.set_defaults(func=list_wrapper)
 
     # prob
-    prob_parser = subparsers.add_parser("prob")
+    prob_parser = subparsers.add_parser('prob',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        help='lists the probabilities of getting the accommodation.',
+    )
+    
+    prob_parser.add_argument('points',
+        type=int,
+        help='Queue points to simulate with',
+    )
 
     prob_filter_group = prob_parser.add_argument_group('filters', 
         description='None (the default value) means that all values are allowed',
-        )
-
-    prob_filter_group.add_argument('points',
-        type=int,
-        help='Queue points to simulate with',
         )
 
     prob_filter_group.add_argument('--type',
