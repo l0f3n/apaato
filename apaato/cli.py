@@ -3,7 +3,7 @@
 import apaato.main as commands
 import argparse
 import sys
-
+from apaato import __version__
 
 def load_wrapper(args):
     commands.load_accommodations()
@@ -30,7 +30,9 @@ def prob_wrapper(args):
 
 def main():
 
-    parser = argparse.ArgumentParser(allow_abbrev=False)
+    parser = argparse.ArgumentParser(allow_abbrev=False, prog=__package__)
+
+    parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
 
     subparsers = parser.add_subparsers()
 
