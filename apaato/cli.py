@@ -23,7 +23,7 @@ def prob_wrapper(args):
 
 def main():
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(allow_abbrev=False)
 
     # Quit if no arguments were supplied
     if len(sys.argv) == 1:
