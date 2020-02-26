@@ -38,13 +38,16 @@ def main():
 
     # load
     load_parser = subparsers.add_parser('load',
+        description='loads all accommodations into a database.',
         help='loads all accommodations into a database.',
     )
+
     load_parser.set_defaults(func=load_wrapper)
 
     # list
     list_parser = subparsers.add_parser('list', 
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description='lists all accommodations.',
         help='lists all accommodations.',
     )
 
@@ -104,6 +107,7 @@ def main():
     # prob
     prob_parser = subparsers.add_parser('prob',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description='lists the probabilities of getting the accommodation.',
         help='lists the probabilities of getting the accommodation.',
     )
     
