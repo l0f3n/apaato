@@ -18,7 +18,7 @@ def list_wrapper(args):
             args_dict[key] = True
 
     del args_dict['all']
-        
+
     commands.list_accommodations(**args_dict)
 
 
@@ -45,42 +45,42 @@ def main():
     load_parser.set_defaults(func=load_wrapper)
 
     # list
-    list_parser = subparsers.add_parser("list")
+    list_parser = subparsers.add_parser("list", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     list_parser.add_argument('--all',
-                            help='(Default: False) Display all properties',
+                            help='Display all properties',
                             action='store_true',)
 
     list_parser.add_argument('--type',
-                            help='(Default: False) Display type: [Korridorrum|1 rum|2 rum|VALLAVÅNING|...]',
+                            help='Display type: [Korridorrum|1 rum|2 rum|VALLAVÅNING|...]',
                             action='store_true',)
 
     list_parser.add_argument('--location',
-                            help='(Default: False) Display location: [Ryd|Irrblosset|Lambohov|...]',
+                            help='Display location: [Ryd|Irrblosset|Lambohov|...]',
                             action='store_true',)
 
     list_parser.add_argument('--queue',
-                            help='(Default: False) Display queue',
+                            help='Display queue',
                             action='store_true',)
 
     list_parser.add_argument('--rent',
-                            help='(Default: False) Display rent',
+                            help='Display rent',
                             action='store_true',)
 
     list_parser.add_argument('--elevator',
-                            help='(Default: False) Display elevator status [Ja|Nej] (Yes|No)',
+                            help='Display elevator status [Ja|Nej] (Yes|No)',
                             action='store_true',)
     
     list_parser.add_argument('--size',
-                        help='(Default: False) Display size',
+                        help='Display size',
                         action='store_true',)
     
     list_parser.add_argument('--floor',
-                        help='(Default: False) Display floor',
+                        help='Display floor',
                         action='store_true',)
 
     list_parser.add_argument('--url',
-                            help='(Default: False) Display url',
+                            help='Display url',
                             action='store_true',)
 
     list_parser.set_defaults(func=list_wrapper)
@@ -95,33 +95,41 @@ def main():
     prob_parser.add_argument('--type',
                             type=str,
                             nargs='+',
-                            help='(Default: all) Only apply for type=[Korridorrum|1 rum|2 rum|VALLAVÅNING|...]',)
+                            help='Apply for accommodations with type',
+                            choices=['Korridorrum', '1 rum', '2 rum', '3 rum', 'VALLAVÅNING'],
+                            )
 
     prob_parser.add_argument('--location',
                             type=str,
                             nargs='+',
-                            help='(Default: all) Only apply for location=[Ryd|Irrblosset|Lambohov|...]',)
+                            help='Apply for accommodations at location',
+                            choices=['Fjärilen', 'Irrblosset', 'Lambohov', 'Ryd', 'Vallastaden'],
+                            )
 
     prob_parser.add_argument('--rent',
                             type=str,
-                            help='(Default: all) Only apply for rent<=argument', )
+                            help='Apply for accommodations with rent less than', )
 
     prob_parser.add_argument('--elevator',
                             type=str,
                             nargs='+',
-                            help='(Default: all) Only apply for elevator=[Ja|Nej] (Yes|No)', )
+                            help='Apply for accommodations with elevator', 
+                            choices=['Ja', 'Nej'],
+                            )
 
     prob_parser.add_argument('--size',
                             type=str,
-                            help='(Default: all) Only apply for size>=argument', )
+                            help='Apply for accommodations with size less than', )
     
     prob_parser.add_argument('--floor',
                             type=str,
                             nargs='+',
-                            help='(Default: all) Only apply for floor=[1|2|3|4]', )
+                            help='Apply for acommodations on floor', 
+                            choices=['1', '2', '3', '4', '5', '6'],
+                            )
 
     prob_parser.set_defaults(func=prob_wrapper)
 
     clargs = parser.parse_args()
-
+    
     clargs.func(clargs)
