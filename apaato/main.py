@@ -60,7 +60,7 @@ def list_accommodations(**kwargs) -> None:
     for deadline in deadlines:
         print(f"[Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}]")
         accommodations = acc_database.get_filtered_accommodations(deadline=deadline)
-        printer.print_accommodations(accommodations, address=True, **kwargs)
+        printer.print_accommodations(accommodations, **kwargs)
 
 
 def simulate(other_points: int, **kwargs) -> List[Tuple[str, float]]:

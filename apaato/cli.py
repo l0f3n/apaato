@@ -42,8 +42,8 @@ def main():
     list_parser.add_argument('--display',
         action='extend',
         nargs='+',
-        default=['location', 'type'],
-        choices=['elevator', 'floor', 'location', 'queue', 'rent', 'size', 'type', 'url'],
+        default=['address', 'location', 'type'],
+        choices=['elevator', 'floor', 'queue', 'rent', 'size', 'url'],
         help='Which properties to display',
         dest='display',
         )
