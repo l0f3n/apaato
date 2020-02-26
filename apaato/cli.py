@@ -25,11 +25,6 @@ def main():
 
     parser = argparse.ArgumentParser(allow_abbrev=False)
 
-    # Quit if no arguments were supplied
-    if len(sys.argv) == 1:
-        parser.print_help(sys.stderr)
-        sys.exit(-1)
-
     subparsers = parser.add_subparsers()
 
     # load
@@ -95,6 +90,13 @@ def main():
 
     prob_parser.set_defaults(func=prob_wrapper)
 
+    # Begin parsing arguments
+
+    # Display help and quit if no arguments were supplied
+    if len(sys.argv) <= 1:
+        parser.print_help(sys.stderr)
+        sys.exit(-1)
+        
     args = parser.parse_args()
 
     args.func(args)
