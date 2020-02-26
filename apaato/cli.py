@@ -95,6 +95,6 @@ def main():
 
     prob_parser.set_defaults(func=prob_wrapper)
 
-    clargs = parser.parse_args()
+    args = parser.parse_args()
 
-    clargs.func(clargs)
+    args.func(args)
