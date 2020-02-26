@@ -10,16 +10,8 @@ def load_wrapper(args):
 
 
 def list_wrapper(args):
-    args_dict = vars(args)
-    del args_dict['func']
-
-    if args.all:
-        for key in args_dict:
-            args_dict[key] = True
-
-    del args_dict['all']
-
-    commands.list_accommodations(**args_dict)
+    display = {name: True for name in args.display}
+    commands.list_accommodations(**display)
 
 
 def prob_wrapper(args):
@@ -47,41 +39,14 @@ def main():
     # list
     list_parser = subparsers.add_parser("list", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    list_parser.add_argument('--all',
-                            help='Display all properties',
-                            action='store_true',)
-
-    list_parser.add_argument('--type',
-                            help='Display type: [Korridorrum|1 rum|2 rum|VALLAVÅNING|...]',
-                            action='store_true',)
-
-    list_parser.add_argument('--location',
-                            help='Display location: [Ryd|Irrblosset|Lambohov|...]',
-                            action='store_true',)
-
-    list_parser.add_argument('--queue',
-                            help='Display queue',
-                            action='store_true',)
-
-    list_parser.add_argument('--rent',
-                            help='Display rent',
-                            action='store_true',)
-
-    list_parser.add_argument('--elevator',
-                            help='Display elevator status [Ja|Nej] (Yes|No)',
-                            action='store_true',)
-    
-    list_parser.add_argument('--size',
-                        help='Display size',
-                        action='store_true',)
-    
-    list_parser.add_argument('--floor',
-                        help='Display floor',
-                        action='store_true',)
-
-    list_parser.add_argument('--url',
-                            help='Display url',
-                            action='store_true',)
+    list_parser.add_argument('--display',
+        action='extend',
+        nargs='+',
+        default=['location', 'type'],
+        choices=['elevator', 'floor', 'location', 'queue', 'rent', 'size', 'type', 'url'],
+        help='Which properties to display',
+        dest='display',
+        )
 
     list_parser.set_defaults(func=list_wrapper)
 
