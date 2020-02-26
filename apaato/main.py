@@ -34,17 +34,17 @@ def load_accommodations() -> None:
 
     acc_database = database.AccommodationDatabase(new_database=True)
 
-    accommodations_gen = scraper.fetch_all_accommodations()
-    total = next(accommodations_gen)
+    accommodations = scraper.AccommodationsFetcher()
+    accommodations_len = len(accommodations)
 
-    print(f'found {total} accommodations.')
+    print(f'found {accommodations_len} accommodations.')
 
     print('Fetching data about each accommodation... ')
 
-    for current, accommodation in enumerate(accommodations_gen, start=1):
+    for current, accommodation in enumerate(accommodations, start=1):
         acc_database.insert_accommodation(accommodation) # type: ignore
 
-        printer.print_progress_bar(current/total) # type: ignore
+        printer.print_progress_bar(current/accommodations_len) # type: ignore
 
     print(f'\nFinished in {time.time() - start_time:.1f} seconds')
 
