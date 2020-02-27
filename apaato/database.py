@@ -1,15 +1,17 @@
 # database.py
 
 import os
-from pathlib import Path
 import sqlite3
 import sys
+
+from pathlib import Path
 from typing import Any, Dict, Generator, Tuple
 
-# Import framework
 from apaato.accommodation import Accommodation
 
+
 FILE_PATH = Path(__file__).parent / "accommodations.db"
+
 
 class AccommodationDatabase:
 

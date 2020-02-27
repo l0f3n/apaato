@@ -1,9 +1,12 @@
-# command_line_interface.py
+# cli.py
 
-import apaato.main as commands
 import argparse
 import sys
+
+import apaato.main as commands
+
 from apaato import __version__
+
 
 def load_wrapper(args):
     commands.load_accommodations()

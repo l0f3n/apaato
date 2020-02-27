@@ -2,7 +2,6 @@
 
 from typing import Dict, Generator, List
 
-# Import framework
 from apaato.accommodation import Accommodation
 
 

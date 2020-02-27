@@ -13,24 +13,24 @@
 #                     accommodation.py
 
 
-import os
 import sys
-import time
+
 from datetime import datetime
+from time import time
 from typing import Any, Dict, List, Tuple
 
-# Import framework
 import apaato.database as database
 import apaato.scraper as scraper
 import apaato.simulator as simulator
 import apaato.printer as printer
+
 
 def load_accommodations() -> None:
     """ Loads all accommodations from studentbostader.se into the database """
 
     print('Loading studentbostader.se... ', end = '', flush=True)
 
-    start_time = time.time()
+    start_time = time()
 
     acc_database = database.AccommodationDatabase(new_database=True)
 
@@ -46,7 +46,7 @@ def load_accommodations() -> None:
 
         printer.print_progress_bar(current/accommodations_len) # type: ignore
 
-    print(f'\nFinished in {time.time() - start_time:.1f} seconds')
+    print(f'\nFinished in {time() - start_time:.1f} seconds')
 
 
 def list_accommodations(
@@ -110,7 +110,7 @@ def simulate(other_points: int,
     # Store all results from simulation
     combinations = []
 
-    start_time = time.time()
+    start_time = time()
 
     for current, result in enumerate(simulation_gen, start=1):
         combinations.append(result)
@@ -119,7 +119,7 @@ def simulate(other_points: int,
 
     printer.print_progress_bar(1)
 
-    print(f'\nFinished in {time.time() - start_time:.1} seconds')
+    print(f'\nFinished in {time() - start_time:.1} seconds')
 
     return combinations
 
