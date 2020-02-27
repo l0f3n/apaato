@@ -32,12 +32,17 @@ def main():
 
     parser = argparse.ArgumentParser(allow_abbrev=False, prog=__package__)
 
-    parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
+    parser.add_argument(
+        '--version', 
+        action='version', 
+        version=f'%(prog)s {__version__}'
+    )
 
     subparsers = parser.add_subparsers()
 
     # load
-    load_parser = subparsers.add_parser('load',
+    load_parser = subparsers.add_parser(
+        'load',
         description='loads all accommodations into a database.',
         help='loads all accommodations into a database.',
     )
@@ -45,13 +50,15 @@ def main():
     load_parser.set_defaults(func=load_wrapper)
 
     # list
-    list_parser = subparsers.add_parser('list', 
+    list_parser = subparsers.add_parser(
+        'list', 
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description='lists all accommodations.',
         help='lists all accommodations.',
     )
 
-    list_parser.add_argument('--display',
+    list_parser.add_argument(
+        '--display',
         action='extend',
         nargs='+',
         default=['address', 'location', 'type'],
@@ -60,42 +67,49 @@ def main():
         dest='display',
     )
 
-    list_filter_group = list_parser.add_argument_group('filters', 
+    list_filter_group = list_parser.add_argument_group(
+        'filters', 
         description='None (the default value) means that all values are allowed.'
     )
 
-    list_filter_group.add_argument('--type',
+    list_filter_group.add_argument(
+        '--type',
         type=str,
         nargs='+',
         help='Only list accommodations that has type',
         choices=['Korridorrum', '1 rum', '2 rum', '3 rum', 'VALLAVÅNING'],
     )
 
-    list_filter_group.add_argument('--location',
+    list_filter_group.add_argument(
+        '--location',
         type=str,
         nargs='+',
         help='Only list accommodations that located at',
         choices=['Fjärilen', 'Irrblosset', 'Lambohov', 'Ryd', 'Vallastaden'],
     )
 
-    list_filter_group.add_argument('--rent',
+    list_filter_group.add_argument(
+        '--rent',
         type=str,
         help='Only list accommodations with rent less than', 
     )
 
-    list_filter_group.add_argument('--elevator',
+    list_filter_group.add_argument(
+        '--elevator',
         type=str,
         nargs='+',
         help='Only list accommodations with elevator', 
         choices=['Ja', 'Nej'],
     )
 
-    list_filter_group.add_argument('--size',
+    list_filter_group.add_argument(
+        '--size',
         type=str,
         help='Only list accommodations with size larger than', 
     )
     
-    list_filter_group.add_argument('--floor',
+    list_filter_group.add_argument(
+        '--floor',
         type=str,
         nargs='+',
         help='Only list accommodations on floor', 
@@ -105,53 +119,62 @@ def main():
     list_parser.set_defaults(func=list_wrapper)
 
     # prob
-    prob_parser = subparsers.add_parser('prob',
+    prob_parser = subparsers.add_parser(
+        'prob',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description='lists the probabilities of getting the accommodation.',
         help='lists the probabilities of getting the accommodation.',
     )
     
-    prob_parser.add_argument('points',
+    prob_parser.add_argument(
+        'points',
         type=int,
         help='Queue points to simulate with',
     )
 
-    prob_filter_group = prob_parser.add_argument_group('filters', 
+    prob_filter_group = prob_parser.add_argument_group(
+        'filters', 
         description='None (the default value) means that all values are allowed',
     )
 
-    prob_filter_group.add_argument('--type',
+    prob_filter_group.add_argument(
+        '--type',
         type=str,
         nargs='+',
         help='Apply for accommodations with type',
         choices=['Korridorrum', '1 rum', '2 rum', '3 rum', 'VALLAVÅNING'],
     )
 
-    prob_filter_group.add_argument('--location',
+    prob_filter_group.add_argument(
+        '--location',
         type=str,
         nargs='+',
         help='Apply for accommodations at location',
         choices=['Fjärilen', 'Irrblosset', 'Lambohov', 'Ryd', 'Vallastaden'],
     )
 
-    prob_filter_group.add_argument('--rent',
+    prob_filter_group.add_argument(
+        '--rent',
         type=str,
         help='Apply for accommodations with rent less than', 
     )
 
-    prob_filter_group.add_argument('--elevator',
+    prob_filter_group.add_argument(
+        '--elevator',
         type=str,
         nargs='+',
         help='Apply for accommodations with elevator', 
         choices=['Ja', 'Nej'],
     )
 
-    prob_filter_group.add_argument('--size',
+    prob_filter_group.add_argument(
+        '--size',
         type=str,
         help='Apply for accommodations with size less than', 
     )
     
-    prob_filter_group.add_argument('--floor',
+    prob_filter_group.add_argument(
+        '--floor',
         type=str,
         nargs='+',
         help='Apply for acommodations on floor', 

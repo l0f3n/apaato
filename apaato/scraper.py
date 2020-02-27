@@ -26,7 +26,9 @@ class AccommodationsFetcher:
         for accommodation_data in self._accommodations_data:
             yield self.fetch_accommodation(accommodation_data)
 
-    def fetch_accommodation(self, accommodation_data: Dict[str, str]) -> Accommodation:
+    def fetch_accommodation(
+            self, 
+            accommodation_data: Dict[str, str]) -> Accommodation:
         """ Gathers information about a single accommodation """
 
         # Store information about a single accommodation

@@ -6,9 +6,10 @@ from typing import Dict, Generator, List
 from apaato.accommodation import Accommodation
 
 
-def print_accommodations(accommodations: List[Accommodation], 
-    display: Dict[str, bool],
-    heading: bool = True) -> None:
+def print_accommodations(
+        accommodations: List[Accommodation], 
+        display: Dict[str, bool],
+        heading: bool = True) -> None:
 
     accommodations = sorted(accommodations, key=lambda a: a.address)
 

@@ -49,7 +49,9 @@ def load_accommodations() -> None:
     print(f'\nFinished in {time.time() - start_time:.1f} seconds')
 
 
-def list_accommodations(display: Dict[str, bool], filter_: Dict[str, Any]) -> None:
+def list_accommodations(
+        display: Dict[str, bool], 
+        filter_: Dict[str, Any]) -> None:
     """ Prints out all accommodations in database sorted by the position a
     person with queue_points would be in the accommodation queues """
 
@@ -67,7 +69,7 @@ def list_accommodations(display: Dict[str, bool], filter_: Dict[str, Any]) -> No
 
 
 def simulate(other_points: int, 
-    filter_: Dict[str, Any]) -> List[Tuple[str, float]]:
+        filter_: Dict[str, Any]) -> List[Tuple[str, float]]:
     """ Runs simulation with other points and saves result in a database """
 
     acc_database = database.AccommodationDatabase()
