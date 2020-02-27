@@ -33,7 +33,6 @@ class AccommodationsFetcher:
             accommodation_data: Dict[str, str]) -> Accommodation:
         """ Gathers information about a single accommodation """
 
-        # Store information about a single accommodation
         accommodation_properties = {
             "address": accommodation_data["adress"],
             "url": accommodation_data["detaljUrl"],
@@ -51,43 +50,27 @@ class AccommodationsFetcher:
             floor = floor_pattern.search(accommodation_properties["address"]).group()[1:]  # type: ignore
             accommodation_properties["floor"] = floor
 
-        # Get text that has information about the queue
         response = requests.get(SINGLE_ACCOMMODATION_URL.format(accommodation_data["detaljUrl"][-64:]))
         accommodation_detailed_data = json.loads(response.text[1:-2])["html"]
 
-        ##### QUEUE #####
-
-        # Get text that contains all applicant queue points
         top_five_queue_points_text = accommodation_detailed_data["objektintressestatus"]
-
-        # Create a RE that matches the numbers beginning with space
         queue_points_pattern = re.compile(r' ([\d ]+)')
-
-        # Create a list of all the matches without leading space
         matches = queue_points_pattern.findall(top_five_queue_points_text)
-
-        # The number of visible queue points
         num_visible_queue_points = max(len(matches) - 1, 0)
 
-        # Remove whitespace and convert all matches to ints, right pad the list
-        # with zeros to make it length 5. First match is # of applicants so i -> i+1.
+        # Convert queue_points to integers, right pad the list with zeros 
+        # to make it length 5. First match is # of applicants so i -> i+1.
         queue = [int(''.join(matches[i+1].split())) if i < num_visible_queue_points else 0 for i in range(5)]
         accommodation_properties['queue'] = queue
 
-        ##### DEADLINE #####
-
-        # Get text that has deadline
         deadline_text = accommodation_detailed_data["objektintresse"]
-
-        # Create RE that matches date yyyy-mm-dd
         deadline_pattern = re.compile(r'\d\d\d\d-\d\d-\d\d')
 
-        # Find deadline in text and add it accommodations_properties
         try:
             deadline = deadline_pattern.search(deadline_text).group()  # type: ignore
-        except AttributeError:
-            # If date wasn't found, it means that it was an Accommodation Direct
-            deadline = "9999-99-99"
+        except AttributeError:  # Accommodation Direct has no deadline
+            deadline = "9999-99-99"  # Placeholder for Accommodation Direct
+
         accommodation_properties["deadline"] = deadline
 
         return Accommodation(**accommodation_properties)

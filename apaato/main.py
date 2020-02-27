@@ -42,9 +42,9 @@ def load_accommodations() -> None:
     print('Fetching data about each accommodation... ')
 
     for current, accommodation in enumerate(accommodations, start=1):
-        acc_database.insert_accommodation(accommodation) # type: ignore
+        acc_database.insert_accommodation(accommodation)
 
-        printer.print_progress_bar(current/accommodations_len) # type: ignore
+        printer.print_progress_bar(current/accommodations_len)
 
     print(f'\nFinished in {time() - start_time:.1f} seconds')
 

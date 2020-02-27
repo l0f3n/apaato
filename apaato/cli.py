@@ -14,19 +14,15 @@ def load_wrapper(args):
 
 def list_wrapper(args):
     display = {name: True for name in args.display}
-
     del args.func
     del args.display
     filter_ = vars(args)
-
     commands.list_accommodations(display, filter_)
 
 
 def prob_wrapper(args):
     del args.func
-
     filter_ = vars(args)
-
     combinations = commands.simulate(filter_.pop('points'), filter_)
     commands.list_probabilites(combinations)
 
@@ -185,8 +181,6 @@ def main():
     )
 
     prob_parser.set_defaults(func=prob_wrapper)
-
-    # Begin parsing arguments
 
     # Display help and quit if no arguments were supplied
     if len(sys.argv) <= 1:
