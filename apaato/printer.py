@@ -1,5 +1,7 @@
 # printer.py
 
+import time
+
 from typing import Dict, Generator, List
 
 from apaato.accommodation import Accommodation
@@ -162,8 +164,28 @@ class CombintationListing:
 
 
 def print_progress_bar(progress: float, max_length: int = 40):
-    """ Simple progress bar. Progress is how far along it should be [0, 1] and
-    max_length is the maximum length the progress bar will reach. """
+    """
+    Print a progress bar.
+
+    :param float progress: The current progress [0, 1]
+    :param int max_length: Length of progress bar in characters
+    """
     l = int(progress*max_length)
-    print(f"\r[{l*'#'+(max_length-l)*'.'}] {progress:.2%} Completed", end='',
-        flush=True)
+    print(f"\r[{l*'#'+(max_length-l)*'.'}] {progress:.2%} Completed", end='', flush=True)
+
+
+def timer(prefix='Finished in ', suffix=' seconds.'):
+    """
+    Decorator used to print execution time of a function.
+
+    :param str prefix: Text before time
+    :param str suffix: Text after time
+    """
+    def inner_timer(func):
+        def wrapper(*args, **kwargs):
+            start_time = time.time()
+            ret = func(*args, **kwargs)
+            print(f'{prefix}{time.time() - start_time:.1f}{suffix}')
+            return ret
+        return wrapper
+    return inner_timer

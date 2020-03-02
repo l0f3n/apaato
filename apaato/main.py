@@ -16,7 +16,6 @@
 import sys
 
 from datetime import datetime
-from time import time
 from typing import Any, Dict, List, Tuple
 
 import apaato.database as database
@@ -25,12 +24,11 @@ import apaato.simulator as simulator
 import apaato.printer as printer
 
 
+@printer.timer(prefix='\nFinished in ')
 def load_accommodations() -> None:
     """ Loads all accommodations from studentbostader.se into the database """
 
     print('Loading studentbostader.se... ', end = '', flush=True)
-
-    start_time = time()
 
     acc_database = database.AccommodationDatabase(new_database=True)
 
@@ -45,8 +43,6 @@ def load_accommodations() -> None:
         acc_database.insert_accommodation(accommodation)
 
         printer.print_progress_bar(current/accommodations_len)
-
-    print(f'\nFinished in {time() - start_time:.1f} seconds')
 
 
 def list_accommodations(
@@ -67,7 +63,7 @@ def list_accommodations(
             print(f"[Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}]")
             printer.print_accommodations(accommodations, display)
 
-
+@printer.timer(prefix='\nFinished in ')
 def simulate(other_points: int, 
         filter_: Dict[str, Any]) -> List[Tuple[str, float]]:
     """ Runs simulation with other points and saves result in a database """
@@ -110,16 +106,12 @@ def simulate(other_points: int,
     # Store all results from simulation
     combinations = []
 
-    start_time = time()
-
     for current, result in enumerate(simulation_gen, start=1):
         combinations.append(result)
 
         printer.print_progress_bar(current/total_combinations)
 
     printer.print_progress_bar(1)
-
-    print(f'\nFinished in {time() - start_time:.1} seconds')
 
     return combinations
 
