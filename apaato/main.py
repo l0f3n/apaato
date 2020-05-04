@@ -26,25 +26,31 @@ import apaato.simulator as simulator
 import apaato.printer as printer
 
 
-@printer.timer(prefix='\nFinished in ')
-def load_accommodations() -> None:
+def load_accommodations(verbose: bool = True) -> None:
     """ Loads all accommodations from studentbostader.se into the database """
 
-    print('Loading studentbostader.se... ', end = '', flush=True)
+    start_time=time.time()
+
+    if verbose:
+        print('Loading studentbostader.se... ', end = '', flush=True)
 
     acc_database = database.AccommodationDatabase(new_database=True)
 
     accommodations = scraper.AccommodationsFetcher()
     accommodations_len = len(accommodations)
 
-    print(f'found {accommodations_len} accommodations.')
-
-    print('Fetching data about each accommodation... ')
+    if verbose:
+        print(f'found {accommodations_len} accommodations.')
+        print('Fetching data about each accommodation... ')
 
     for current, accommodation in enumerate(accommodations, start=1):
         acc_database.insert_accommodation(accommodation)
 
-        printer.print_progress_bar(current/accommodations_len)
+        if verbose:
+            printer.print_progress_bar(current/accommodations_len)
+
+    if verbose:
+        print(f'\nFinished in {time.time() - start_time:.1f} seconds.')
 
 
 def list_accommodations(
@@ -129,14 +135,17 @@ def monitor(
 
     def check_for_accommodation_direct(display, filter_, s) -> None:
 
-        load_accommodations()
+        load_accommodations(verbose=False)
         acc_database = database.AccommodationDatabase()
         accommodations = list(acc_database.get_filtered_accommodations(filter_))
+
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{now}]")
 
         if accommodations:
             printer.print_accommodations(accommodations, display=display)
         else:
-            print("No accommodations found!")
+            print("No accommodations found")
 
         s.enter(interval, 1, check_for_accommodation_direct, (display, filter_, s))
 

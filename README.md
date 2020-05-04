@@ -24,4 +24,6 @@ The three main commands are listed below.
 
 `apaato prob`: lists the probabilities of getting the accommodation.
 
+`apaato mont`: monitor accommodations, print when an accommodation direct matches critera.
+
 For more options on each of these commands, use the `-h` flag.
