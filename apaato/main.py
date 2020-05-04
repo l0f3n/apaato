@@ -13,7 +13,9 @@
 #                     accommodation.py
 
 
+import time
 import sys
+import sched
 
 from datetime import datetime
 from typing import Any, Dict, List, Tuple
@@ -114,6 +116,32 @@ def simulate(other_points: int,
     printer.print_progress_bar(1)
 
     return combinations
+
+
+def monitor(
+        interval: int,
+        display: Dict[str, bool],
+        filter_: Dict[str, Any]) -> None:
+
+    s = sched.scheduler(time.time, time.sleep)
+
+    filter_.update({'deadline': '9999-99-99'})
+
+    def check_for_accommodation_direct(display, filter_, s) -> None:
+
+        load_accommodations()
+        acc_database = database.AccommodationDatabase()
+        accommodations = list(acc_database.get_filtered_accommodations(filter_))
+
+        if accommodations:
+            printer.print_accommodations(accommodations, display=display)
+        else:
+            print("No accommodations found!")
+
+        s.enter(interval, 1, check_for_accommodation_direct, (display, filter_, s))
+
+    s.enter(0, 1, check_for_accommodation_direct, (display, filter_, s))
+    s.run()
 
 
 def list_probabilites(combinations):

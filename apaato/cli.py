@@ -27,6 +27,14 @@ def prob_wrapper(args):
     commands.list_probabilites(combinations)
 
 
+def mont_wrapper(args):
+    display = {name: True for name in args.display}
+    del args.func
+    del args.display
+    filter_ = vars(args)
+    commands.monitor(filter_.pop('interval'), display, filter_)
+
+
 def main():
 
     parser = argparse.ArgumentParser(allow_abbrev=False, prog=__package__)
@@ -181,6 +189,81 @@ def main():
     )
 
     prob_parser.set_defaults(func=prob_wrapper)
+
+    # Monitor
+    mont_parser = subparsers.add_parser(
+        'mont',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description='monitor accommodation direct.',
+        help='monitor accommodation direct.',
+    )
+
+    mont_parser.add_argument(
+        'interval',
+        type=int,
+        help='The interval between each check',
+    )
+
+    mont_filter_parser = mont_parser.add_argument_group(
+        'filters',
+        description='None (the default value) means that all values are allowed',
+    )
+
+    mont_filter_parser.add_argument(
+        '--display',
+        action='extend',
+        nargs='+',
+        default=['address', 'location', 'type'],
+        choices=['elevator', 'floor', 'queue', 'rent', 'size', 'url'],
+        help='Which properties to display',
+        dest='display',
+    )
+
+    mont_filter_parser.add_argument(
+        '--type',
+        type=str,
+        nargs='+',
+        help='Apply for accommodations with type',
+        choices=['Korridorrum', '1 rum', '2 rum', '3 rum', 'VALLAVÅNING'],
+    )
+
+    mont_filter_parser.add_argument(
+        '--location',
+        type=str,
+        nargs='+',
+        help='Apply for accommodations at location',
+        choices=['Fjärilen', 'Irrblosset', 'Lambohov', 'Ryd', 'Vallastaden'],
+    )
+
+    mont_filter_parser.add_argument(
+        '--rent',
+        type=str,
+        help='Apply for accommodations with rent less than',
+    )
+
+    mont_filter_parser.add_argument(
+        '--elevator',
+        type=str,
+        nargs='+',
+        help='Apply for accommodations with elevator',
+        choices=['Ja', 'Nej'],
+    )
+
+    mont_filter_parser.add_argument(
+        '--size',
+        type=str,
+        help='Apply for accommodations with size larger than',
+    )
+
+    mont_filter_parser.add_argument(
+        '--floor',
+        type=str,
+        nargs='+',
+        help='Apply for acommodations on floor',
+        choices=['1', '2', '3', '4', '5', '6'],
+    )
+
+    mont_parser.set_defaults(func=mont_wrapper)
 
     # Display help and quit if no arguments were supplied
     if len(sys.argv) <= 1:
