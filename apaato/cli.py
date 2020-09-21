@@ -23,8 +23,8 @@ def list_wrapper(args):
 def prob_wrapper(args):
     del args.func
     filter_ = vars(args)
-    combinations = commands.simulate(filter_.pop('points'), filter_)
-    commands.list_probabilites(combinations)
+    probabilities = commands.simulate(filter_.pop('points'), filter_)
+    commands.list_probabilites(probabilities)
 
 
 def main():

@@ -12,120 +12,85 @@ import apaato.database
 from apaato.accommodation import Accommodation
 
 
-SIMULATIONS_PER_COMBINATION = 1000
+NUM_SIMULATIONS = 1000
 
+class Simulator:
 
-def run_simulation(other_points: int,
-                   accommodations: list,
-                   accommodations_to_apply_for: list) -> dict:
-    """ Runs simulation for every combination of accommodations that is
-    desired """
+    def __init__(
+            self,
+            other_points: int,
+            accommodations: list,
+            accommodations_to_apply_for: list):
+    
+        self.other_points = other_points
+        self.accommodations = accommodations
+        self.accommodations_to_apply_for = accommodations_to_apply_for
 
-    def total_chance(combination: list) -> float:
-        """ Returns the total chance of getting any accommodation at all from
-        combination """
-
-        return sum((accommodation[1] for accommodation in combination))
-
-    def nck(n: int, r: int) -> int:
-        """ Used to calculate how many simulations are to be run """
-
-        r = min(r, n-r)
-        numer = functools.reduce(op.mul, range(n, n-r, -1), 1)
-        denom = functools.reduce(op.mul, range(1, r+1), 1)
-        return numer // denom
-
-    def run_iteration() -> bool:
-        """ Tests if it's necessary to simulate current combination """
-
-        # For every unnecessary combination
-        for u_combination in u_combinations:
-
-            # If all accommodations in an unnecessary combination is in current
-            # combination then its unnecessary to run simulation
-            for u_accommodation in u_combination:
-                if u_accommodation not in current_combination:
-                    break
-            else:
-                return False
-
-        return True
-
-    # Calculate the amount of accommodations that are to be applied for at a
-    # time
-    count = min(len(accommodations_to_apply_for), 5)
-
-    yield sum([nck(len(accommodations_to_apply_for), number)
-           for number in range(1, count+1)])
-
-    # Keeps track of all accommodations that have a 100% or 0% chance.
-    # Any simulation with these accommodations in them is not necessary to run
-    # because they will have the exact same chance (0%) or 100% (100%) whether
-    # having that accommodation in them or not
-    u_combinations = []
-
-    for number in range(1, count+1):
-
-        # Find all combinations of all desired accommodations
-        combinations = itertools.combinations(accommodations_to_apply_for, number)
-
-        # For every combination of accommodations
-        for current_combination in combinations:
-
-            # If it is necessary to test this combination
-            if not run_iteration():
-                continue
+    def __len__(self): 
+        return len(self.accommodations_to_apply_for)
+        
+    def __iter__(self):
+        for desired_accommodation in self.accommodations_to_apply_for:
 
             # Make a copy as to not modify the original
-            accommodations_copy = copy.deepcopy(accommodations)
+            accommodations_copy = copy.deepcopy(self.accommodations)
 
-            # Enter queue of every accommodation that is in current combination
-            for desired_accommodation in current_combination:
-                for accommodation in accommodations_copy:
-                    if desired_accommodation.address == accommodation.address:
-                        accommodation.insert_into_queue(other_points)
-                        break
+            # Store current address
+            current_address = desired_accommodation.address
 
-            # Run many simulations with current combination
-            res = list(do_simulations(accommodations_copy, current_combination,
-                                      other_points).items())
+            # Enter queue of the current desired accommodation 
+            for accommodation in accommodations_copy:
+                if current_address == accommodation.address:
+                    accommodation.insert_into_queue(self.other_points)
+                    break
 
-            chance = total_chance(res)
-            if chance == 0 or math.isclose(chance, 1):
-                u_combinations.append(current_combination)
+            result = do_many_simulations(accommodations_copy)
 
-            yield res
-
-
-def do_simulations(accommodations: list,
-                   combination: list,
-                   other_points: int, ) -> dict:
-    """ Runs simulation of accommodations n number of times and returns a
-    dictionary with {address, [(points, chance), ...]} that gives the chance
-    for person with points to get the accommodation at address """
-
-    ret = {accommodation.address: 0 for accommodation in combination}
-
-    # Run the simulation n times
-    for _ in range(SIMULATIONS_PER_COMBINATION):
-        result = simulate(accommodations)
-
-        # For every person that got an accommodation
-        for address, points in result:
-
-            # Only save my chances
-            if points == other_points:
-                ret[address] += 1/SIMULATIONS_PER_COMBINATION
-                break
-
-    return ret
+            # Tuple containing address and probability of getting it 
+            #   ('Rydsvägen 248 A.36': 1)
+            yield (current_address, 
+                result[self.other_points][current_address] if self.other_points in result else 0)
 
 
-def simulate(accommodations: list) -> list:
-    """ Returns a list of tuples (address, points) which is a way that the
-    accommodations could be distributed between every person, points
-    representing the person that got the accommodation at address """
+def do_many_simulations(accommodations: list) -> dict:
+    """ Do many simulations of who would get the given accommodations """
 
+    #ret = {accommodation.address: 0 for accommodation in combination}
+
+    # Dictionary with points mapping to probabilities of gettings apartments
+    # {
+    #   '1000': { 'Rydsvägen 252 C.17': 0.1, 'Alsättersgatan 9 B.25': 0.5, ... }
+    #                               .
+    #                               .
+    # }
+    result = {}
+
+    for _ in range(NUM_SIMULATIONS):
+        one_result = do_one_simulation(accommodations)
+
+        for address, points in one_result:
+            
+            # TODO: Use defaultdict instead for the two following snippets
+            if points not in result:
+                result[points] = {}
+
+            if address not in result[points]:
+                result[points][address] = 0
+
+            result[points][address] += 1/NUM_SIMULATIONS
+
+    return result
+
+
+def do_one_simulation(accommodations: list) -> list:
+    """ Uses the accommodations to simulate who would get them. """
+
+    # Keeps track of the result in the format address, points (who got the accommodation)
+    # [
+    #   (Rydsvägen 262 A.12, 1050)
+    #               .
+    #               .
+    # ]
     result = []
 
     # Keep a list of indexes of accommodations that are still available

@@ -64,7 +64,8 @@ def list_accommodations(
             printer.print_accommodations(accommodations, display)
 
 @printer.timer(prefix='\nFinished in ')
-def simulate(other_points: int, 
+def simulate(
+        other_points: int, 
         filter_: Dict[str, Any]) -> List[Tuple[str, float]]:
     """ Runs simulation with other points and saves result in a database """
 
@@ -84,9 +85,10 @@ def simulate(other_points: int,
     deadline = min(accommodation.deadline for accommodation in acc_database.get_all_accommodations())
     deadline_filter = {'deadline' : deadline}
 
-    # Only simulate with the apartments that have the earliest deadline
+    # Use only the apartments that have the earliest deadline
     accommodations = list(acc_database.get_filtered_accommodations(deadline_filter))
 
+    # Only apply for accommodations that match the user specified filter
     filter_.update(deadline_filter)
     accommodations_to_apply_for = list(acc_database.get_filtered_accommodations(filter_))
 
@@ -94,31 +96,28 @@ def simulate(other_points: int,
         print("No accommodation matched the critera.")
         sys.exit(-1)
 
-    simulation_gen = simulator.run_simulation(other_points,
-                                               accommodations,
-                                               accommodations_to_apply_for,
-                                            )
+    accommodations_simulator = simulator.Simulator(
+                                other_points,
+                                accommodations,
+                                accommodations_to_apply_for,
+                                )
 
     print(f'{len(accommodations_to_apply_for)} accommodations matched the criteria...')
 
-    total_combinations = next(simulation_gen)  # type: ignore
+    desired_accommodations_count = len(accommodations_simulator)
 
-    # Store all results from simulation
-    combinations = []
+    # Store probabilities of getting an apartment
+    probabilities: List[Tuple[str, float]] = []
 
-    for current, result in enumerate(simulation_gen, start=1):
-        combinations.append(result)
+    for current, result in enumerate(accommodations_simulator, start=1):
+        probabilities.append(result)
+        printer.print_progress_bar(current/desired_accommodations_count)
 
-        printer.print_progress_bar(current/total_combinations)
-
-    printer.print_progress_bar(1)
-
-    return combinations
+    return probabilities
 
 
-def list_probabilites(combinations):
-    """ Print all combinations sorted by the chance of getting any of the
-    accommodations in that combination """
+def list_probabilites(probabilities: List[Tuple[str, float]]):
+    """ Print probabilities of getting an accommodation """
 
-    tf = printer.CombintationListing(combinations)
-    tf.print()
+    print("These are the estimated probabilities of getting an accommodation:")
+    printer.print_probabilities(probabilities)
