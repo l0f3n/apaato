@@ -84,7 +84,7 @@ def main():
         type=str,
         nargs='+',
         help='Only list accommodations that located at',
-        choices=['Fjärilen', 'Irrblosset', 'Lambohov', 'Ryd', 'Vallastaden'],
+        choices=['Fjärilen', 'Irrblosset', 'Lambohov', 'Ryd', 'Vallastaden', 'T1'],
     )
 
     list_filter_group.add_argument(
@@ -149,7 +149,7 @@ def main():
         type=str,
         nargs='+',
         help='Apply for accommodations at location',
-        choices=['Fjärilen', 'Irrblosset', 'Lambohov', 'Ryd', 'Vallastaden'],
+        choices=['Fjärilen', 'Irrblosset', 'Lambohov', 'Ryd', 'Vallastaden', 'T1'],
     )
 
     prob_filter_group.add_argument(
