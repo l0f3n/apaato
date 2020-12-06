@@ -1,10 +1,26 @@
 # simulation.py
 
 import copy
+import logging
 import random
 
 
+# ==== Setup logging ====
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s: %(message)s')
+
+file_handler = logging.FileHandler('apaato.log', encoding='utf-8')
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+# ==== Setup logging ====
+
+
 NUM_SIMULATIONS = 1000
+
 
 class Simulator:
 
@@ -30,6 +46,8 @@ class Simulator:
             # Store current address
             current_address = desired_accommodation.address
 
+            logger.info(f"Applying to '{current_address}'.")
+
             # Enter queue of the current desired accommodation 
             for accommodation in accommodations_copy:
                 if current_address == accommodation.address:
@@ -46,8 +64,6 @@ class Simulator:
 
 def do_many_simulations(accommodations: list) -> dict:
     """ Do many simulations of who would get the given accommodations """
-
-    #ret = {accommodation.address: 0 for accommodation in combination}
 
     # Dictionary with points mapping to probabilities of gettings apartments
     # {

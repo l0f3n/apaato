@@ -4,3 +4,4 @@ __pycache__
 accommodations.db
 apaato.egg-info
 apaato_env
+*.log
