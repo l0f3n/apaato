@@ -2,7 +2,7 @@
 
 import time
 
-from typing import Dict, Generator, List, Tuple
+from typing import Dict, List, Tuple
 
 from apaato.accommodation import Accommodation
 

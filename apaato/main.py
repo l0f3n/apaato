@@ -15,13 +15,12 @@
 
 import sys
 
-from datetime import datetime
 from typing import Any, Dict, List, Tuple
 
-import apaato.database as database
-import apaato.scraper as scraper
+import apaato.database  as database
+import apaato.scraper   as scraper
 import apaato.simulator as simulator
-import apaato.printer as printer
+import apaato.printer   as printer
 
 
 @printer.timer(prefix='\nFinished in ')

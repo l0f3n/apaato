@@ -3,10 +3,6 @@
 import copy
 import random
 
-# Import framework
-import apaato.database
-from apaato.accommodation import Accommodation
-
 
 NUM_SIMULATIONS = 1000
 
