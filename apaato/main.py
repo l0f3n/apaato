@@ -13,31 +13,49 @@
 #                     accommodation.py
 
 
+import logging
 import sys
 
-from datetime import datetime
 from typing import Any, Dict, List, Tuple
 
-import apaato.database as database
-import apaato.scraper as scraper
+import apaato.database  as database
+import apaato.scraper   as scraper
 import apaato.simulator as simulator
-import apaato.printer as printer
+import apaato.printer   as printer
+
+# ==== Setup logging ====
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s: %(message)s')
+
+file_handler = logging.FileHandler('apaato.log', encoding='utf-8')
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.ERROR)
+
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+# ==== Setup logging ====
 
 
 @printer.timer(prefix='\nFinished in ')
 def load_accommodations() -> None:
     """ Loads all accommodations from studentbostader.se into the database """
 
+    logger.info("Loading studentbostader.se.")
     print('Loading studentbostader.se... ', end = '', flush=True)
-
-    acc_database = database.AccommodationDatabase(new_database=True)
 
     accommodations = scraper.AccommodationsFetcher()
     accommodations_len = len(accommodations)
 
     print(f'found {accommodations_len} accommodations.')
 
-    print('Fetching data about each accommodation... ')
+    print('Fetching properties of each accommodation... ')
+
+    acc_database = database.AccommodationDatabase(new_database=True)
 
     for current, accommodation in enumerate(accommodations, start=1):
         acc_database.insert_accommodation(accommodation)
@@ -55,9 +73,12 @@ def list_accommodations(
 
     deadlines = sorted(set(accommodation.deadline for accommodation in acc_database.get_all_accommodations()))
 
+    logger.debug("Found deadlines: " + ', '.join([deadline if deadline != '9999-99-99' else 'Accommodation Direct' for deadline in deadlines]))
+
     for deadline in deadlines:
         filter_['deadline'] = deadline
         accommodations = list(acc_database.get_filtered_accommodations(filter_))
+        logger.info(f"Found {len(accommodations)} accommodations with deadline {deadline}.")
         
         if len(accommodations) > 0:
             print(f"[Deadline: {deadline if deadline != '9999-99-99' else 'Accommodation Direct'}]")
@@ -78,31 +99,36 @@ def simulate(
 
     # Check that the queue_points are unique
     if other_points in unique_queue_points:
-        print(f"Unable to simulate with {other_points} points. Points must be unique.")
+        logger.error(f"Unable to calculate probabilities with non-unique {other_points} queue points. Exiting.")
         sys.exit(-1)
 
     # Finds the earliest latest application acceptance date
     deadline = min(accommodation.deadline for accommodation in acc_database.get_all_accommodations())
     deadline_filter = {'deadline' : deadline}
 
+    logger.info(f"Earliest deadline is {deadline}.")
+
     # Use only the apartments that have the earliest deadline
     accommodations = list(acc_database.get_filtered_accommodations(deadline_filter))
+
+    logger.info(f"Found {len(accommodations)} accommodations with deadline {deadline}.")
 
     # Only apply for accommodations that match the user specified filter
     filter_.update(deadline_filter)
     accommodations_to_apply_for = list(acc_database.get_filtered_accommodations(filter_))
 
     if len(accommodations_to_apply_for) == 0:
-        print("No accommodation matched the critera.")
+        logger.error("No accommodation matched the critera. Exiting.")
         sys.exit(-1)
 
     accommodations_simulator = simulator.Simulator(
-                                other_points,
-                                accommodations,
-                                accommodations_to_apply_for,
+                                    other_points,
+                                    accommodations,
+                                    accommodations_to_apply_for,
                                 )
 
-    print(f'{len(accommodations_to_apply_for)} accommodations matched the criteria...')
+    logger.info(f'There are {len(accommodations_to_apply_for)} accommodations that matches the desired criteria.')
+    print(f'{len(accommodations_to_apply_for)} accommodations matched the criteria.')
 
     desired_accommodations_count = len(accommodations_simulator)
 

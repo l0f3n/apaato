@@ -1,18 +1,34 @@
 # cli.py
 
 import argparse
+import logging
 import sys
 
 import apaato.main as commands
 
 from apaato import __version__
 
+# ==== Setup logging ====
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s: %(message)s')
+
+file_handler = logging.FileHandler('apaato.log', encoding='utf-8')
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+# ==== Setup logging ====
+
 
 def load_wrapper(args):
+    logger.info('Executing load.')
     commands.load_accommodations()
 
 
 def list_wrapper(args):
+    logger.info('Executing list.')
     display = {name: True for name in args.display}
     del args.func
     del args.display
@@ -21,6 +37,7 @@ def list_wrapper(args):
 
 
 def prob_wrapper(args):
+    logger.info('Executing prob.')
     del args.func
     filter_ = vars(args)
     probabilities = commands.simulate(filter_.pop('points'), filter_)

@@ -1,12 +1,27 @@
 # scraper.py
 
 import json
+import logging
 import re
 import requests
 
 from typing import Dict, Generator
 
 from apaato.accommodation import Accommodation
+
+
+# ==== Setup logging ====
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s: %(message)s')
+
+file_handler = logging.FileHandler('apaato.log', encoding='utf-8')
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+# ==== Setup logging ====
 
 
 ALL_ACCOMMODATIONS_URL = 'https://marknad.studentbostader.se/widgets/?pagination=0&paginationantal=1000&callback=jQuery17109732211216157454_1492970171534&widgets%5B%5D=koerochprenumerationer%40STD&widgets%5B%5D=objektfilter%40lagenheter&widgets%5B%5D=objektsortering%40lagenheter&widgets%5B%5D=objektlista%40lagenheter&widgets%5B%5D=pagineringgonew%40lagenheter&widgets%5B%5D=pagineringlista%40lagenheter&widgets%5B%5D=pagineringgoold%40lagenheter&_=1492970171907'
@@ -20,6 +35,8 @@ class AccommodationsFetcher:
         self._accommodations_data = json.loads(response.text[response.text.find('{'):-2])["data"]["objektlista@lagenheter"]
 
         self._len = len(self._accommodations_data)
+
+        logger.debug(f"Found {self._len} accommodations.")
 
     def __len__(self) -> int:
         return self._len
@@ -43,12 +60,16 @@ class AccommodationsFetcher:
             "size": float(accommodation_data["yta"]),
         }
 
+        logger.info(f"Fetching properties about '{accommodation_properties['address']}'...")
+
         try:
-            accommodation_properties["floor"] = int(accommodation_data["vaning"])
+            floor = int(accommodation_data["vaning"])
         except ValueError:
             floor_pattern = re.compile(r"\.\d")
-            floor = floor_pattern.search(accommodation_properties["address"]).group()[1:]  # type: ignore
-            accommodation_properties["floor"] = floor
+            floor = floor_pattern.search(accommodation_properties["address"]).group()[1:]
+            logger.debug(f"Invalid floor '{accommodation_data['vaning']}', searched and found {floor} in text instead.")
+
+        accommodation_properties["floor"] = floor
 
         response = requests.get(SINGLE_ACCOMMODATION_URL.format(accommodation_data["detaljUrl"][-64:]))
         accommodation_detailed_data = json.loads(response.text[1:-2])["html"]
@@ -67,10 +88,13 @@ class AccommodationsFetcher:
         deadline_pattern = re.compile(r'\d\d\d\d-\d\d-\d\d')
 
         try:
-            deadline = deadline_pattern.search(deadline_text).group()  # type: ignore
+            deadline = deadline_pattern.search(deadline_text).group() 
         except AttributeError:  # Accommodation Direct has no deadline
+            logger.debug("Didn't find a deadline. Assuming it is an Accommodation Direct.")
             deadline = "9999-99-99"  # Placeholder for Accommodation Direct
 
         accommodation_properties["deadline"] = deadline
+
+        logger.debug(f"... which are {accommodation_properties}.")
 
         return Accommodation(**accommodation_properties)
