@@ -1,16 +1,33 @@
 # printer.py
 
+import logging
 import time
 
-from typing import Dict, Generator, List, Tuple
+from typing import Dict, List, Tuple
 
 from apaato.accommodation import Accommodation
+
+
+# ==== Setup logging ====
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s: %(message)s')
+
+file_handler = logging.FileHandler('apaato.log', encoding='utf-8')
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+# ==== Setup logging ====
 
 
 def print_accommodations(
         accommodations: List[Accommodation], 
         display: Dict[str, bool],
         heading: bool = True) -> None:
+
+    logger.info("Printing accommodations.")
 
     accommodations = sorted(accommodations, key=lambda a: a.address)
 
@@ -25,8 +42,9 @@ def print_accommodations(
     lengths = {key: max(
         [len(str(getattr(a, key))) for a in accommodations]
         + [len(key) if heading else 0]
-        )
-        for key in display}
+        ) for key in display}
+
+    logger.debug(f"Lengths are {lengths}.")
 
     # Creates a list with all headers. Each string is right-padded
     # according to maximum property length in each column.
@@ -36,6 +54,8 @@ def print_accommodations(
         for name, value in display.items()
         if value
         ] if heading else []
+    
+    logger.debug(f"Header is {header}.")
 
     # Creates a list of lists containing all accommodations. Each string is
     # right-padded according to maximum property length in each column.
@@ -61,6 +81,8 @@ def print_accommodations(
 
 
 def print_probabilities(probabilities: List[Tuple[str, float]]):
+
+    logger.info("Printing probabilities.")
     
     # Constructs the output for printing like this:
     # 100%: Rydsvägen 230 B.17
