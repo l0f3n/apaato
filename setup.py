@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='apaato',
-    version='0.1.0',
+    version='0.1.1',
     description='Calculates the probability of getting an accommodation at studentbostader.se.',
     url='https://github.com/l0f3n/apaato',
     author='Victor Löfgren',
