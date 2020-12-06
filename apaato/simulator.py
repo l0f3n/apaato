@@ -1,10 +1,6 @@
 # simulation.py
 
 import copy
-import functools
-import itertools
-import math
-import operator as op
 import random
 
 # Import framework

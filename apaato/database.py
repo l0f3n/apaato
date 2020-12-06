@@ -1,6 +1,5 @@
 # database.py
 
-import os
 import sqlite3
 import sys
 
@@ -18,14 +17,10 @@ class AccommodationDatabase:
     def __init__(self, new_database: bool = False) -> None:
 
         if new_database:
-            if FILE_PATH.is_file():
-                os.remove(FILE_PATH)
-            elif not FILE_PATH.parent.is_dir():
-                os.mkdir(FILE_PATH.parent)
-        else:
-            if not FILE_PATH.is_file():
-                print("No database found. Please run 'apaato load' first.")
-                sys.exit()
+            FILE_PATH.unlink(missing_ok=True)
+        elif not FILE_PATH.is_file():
+            print("No database found. Did you forget to run 'apaato load' first?")
+            sys.exit()
 
         self.conn = sqlite3.connect(FILE_PATH)
 
