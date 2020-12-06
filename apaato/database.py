@@ -61,12 +61,6 @@ class AccommodationDatabase:
                           fourth integer,
                           fifth integer) """)
 
-        # TODO: Remove this. We always delete the database if we want to create
-        # a new one, so the only things this will do is wiping an already empty
-        # database. 
-        if new_database:
-            self.wipe()
-
     def insert_accommodation(self, acc: Accommodation) -> None:
         """ Inserts an Accommodation object into database """
 
@@ -157,11 +151,3 @@ class AccommodationDatabase:
 
         search = "SELECT * FROM accommodations"
         yield from self.query(search)
-
-    def wipe(self) -> None:
-
-        logger.info(f"Wiping database.")
-
-        with self.conn:
-            self.curs.execute('DELETE FROM accommodations')
-
